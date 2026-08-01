@@ -26,3 +26,13 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Canonical editing flow:** Treat the personal skill as the authoring source through validation. Synchronize release files into `.agents/skills/project-mentor/` with `tools/sync_skill.py` and require byte-for-byte parity before release.
 - **Template state:** The official initializer's placeholder `SKILL.md` is intentionally present at the Phase 2 boundary and fails validation because its description is not final. Replace every placeholder during Phase 4; do not interpret this expected intermediate result as release validation.
 - **Repository boundary:** Keep development tools, tests, CI, contribution files, and public documentation outside the nested installable skill. Runtime behavior inside the skill remains standard-library-only.
+
+## 2026-08-01 — Phase 3 deterministic core
+
+- **Versioned contracts:** Use schema version 1 for ledgers, events, project evidence, user demonstrations, and receipt metadata. Reject unknown fields and unsupported versions before mutation.
+- **Event integrity:** Require caller-supplied stable event IDs, strict typed payloads, optimistic expected revisions, idempotent identical replay, and fail-closed conflicting replay. Keep `revision` equal to applied event count.
+- **User-claim safeguard:** Accept `user_evidence_added` only from `user` or `shared` actors, and forbid user demonstrations inside `concept_identified`. Agent-authored project evidence can move exposure from `not_seen` to `encountered`, never create a demonstration.
+- **Persistence safety:** Bound input at 1 MiB, decode UTF-8 explicitly, validate before writing, reject existing symlink targets, recheck file content before replacement, and use same-directory temporary files plus atomic replace.
+- **Redaction boundary:** Redact recognized credentials recursively before JSON persistence and again before rendered or summarized output. Prefer omission or a marker over retaining uncertain sensitive material.
+- **Stable CLI exits:** Use 0 for success, 2 for invalid input/schema, 3 for revision conflict, 4 for I/O or path safety, and 5 for conflicting event replay. Expected failures do not emit tracebacks unless `--debug` is requested.
+- **Rendering:** Select up to five active concepts by classification and evidence weight, render deterministic English or Chinese receipts, and state unverified user understanding explicitly when demonstrations are absent.
