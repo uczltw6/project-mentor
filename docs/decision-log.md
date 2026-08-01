@@ -18,3 +18,11 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Activation boundary:** Require explicit or clearly implied build-while-learning or post-hoc learning-audit intent. Ordinary delegated implementation and isolated explanations remain outside the skill.
 - **Persistence boundary:** Keep state in conversation or temporary storage by default. Create `.project-mentor/` or any alternative learning artifact only after explicit user opt-in.
 - **Mode contract:** Expose exactly `recap`, `guided`, and `hands_on`; make `guided` the activation default and honor mode changes immediately without restarting the delivery task.
+
+## 2026-08-01 — Phase 2 initialization and scaffold
+
+- **Official initialization:** Create `$HOME/.agents/skills/project-mentor` with the official `init_skill.py`, requesting only `scripts` and `references`, and generate the initial `agents/openai.yaml` through that command.
+- **UI metadata:** Use “Project Mentor,” “Learn through evidence in real projects,” and a one-sentence `$project-mentor` default prompt. Keep implicit invocation at its documented default and add no icons, colors, MCP tools, or external dependencies.
+- **Canonical editing flow:** Treat the personal skill as the authoring source through validation. Synchronize release files into `.agents/skills/project-mentor/` with `tools/sync_skill.py` and require byte-for-byte parity before release.
+- **Template state:** The official initializer's placeholder `SKILL.md` is intentionally present at the Phase 2 boundary and fails validation because its description is not final. Replace every placeholder during Phase 4; do not interpret this expected intermediate result as release validation.
+- **Repository boundary:** Keep development tools, tests, CI, contribution files, and public documentation outside the nested installable skill. Runtime behavior inside the skill remains standard-library-only.
