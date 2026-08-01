@@ -1,0 +1,13 @@
+# Decision log
+
+This log records release-relevant decisions without retaining private paths, credentials, or hidden reasoning.
+
+## 2026-08-01 — Phase 0 baseline
+
+- **Safe worktree:** Build from a uniquely named directory under the system temporary directory. The mounted OneDrive workspace passed creation, rename, overwrite, Git initialization, index update, lock creation, and commit checks, but recursive cleanup of Git objects was unreliable. Keep the mounted directory as an export and bundle-checkpoint location only.
+- **Personal skill scope:** Author and install the personal skill under `$HOME/.agents/skills/project-mentor`, the current user-scope location documented by Codex. Do not use the older `$HOME/.codex/skills/remote-skills` fallback because current official guidance specifies `$HOME/.agents/skills`.
+- **Publication boundary:** The authenticated GitHub account is `uczltw6`; `uczltw6/project-mentor` does not exist. Publication under that exact owner is available once all local gates pass.
+- **Git identity:** Preserve the authenticated account's existing Git name and GitHub-provided no-reply email. Do not add co-authors.
+- **Runtime baseline:** Python 3.11.5, Git 2.45.1, GitHub CLI 2.91.0, and Node.js 24.15.0 are available. The implementation target remains Python 3.10+ with standard-library-only runtime dependencies.
+- **Distribution boundary:** Release a standalone skill and public source repository. Do not publish a plugin, package-registry artifact, or marketplace submission in V1.
+
