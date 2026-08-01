@@ -15,25 +15,26 @@ same implementation and use the same ledger schema.
 
 ## Contents
 
-- [Install from source](#install-from-source)
+- [Install](#install)
 - [Global contract](#global-contract)
 - [Commands](#commands)
 - [Output contract](#output-contract)
 - [Exit codes](#exit-codes)
 - [Compatibility](#compatibility)
 
-## Install from source
+## Install
 
-Until a PyPI release is explicitly published, install from a trusted checkout:
+For an isolated command installation:
 
 ```bash
-python -m pip install .
+pipx install project-mentor==0.3.0
 project-mentor --version
 project-mentor doctor --project-root .
 ```
 
-For an isolated application install, `pipx install .` is also suitable. The
-runtime has no third-party dependencies and performs no network access,
+For a project environment, use `python -m pip install project-mentor==0.3.0`.
+Installing a trusted checkout with `python -m pip install .` is also supported.
+The runtime has no third-party dependencies and performs no network access,
 telemetry, shell-history ingestion, or command execution.
 
 ## Global contract
