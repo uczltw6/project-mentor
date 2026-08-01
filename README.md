@@ -238,6 +238,7 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - [Architecture](docs/architecture.md)
 - [Product contract](docs/product-contract.md)
 - [Evaluation and reproduction](docs/evaluation.md)
+- [v0.1.0 release readiness](docs/release-readiness-v0.1.0.md)
 - [Threat model](docs/threat-model.md)
 - [v0.1.0 security review](docs/security-review-v0.1.0.md)
 - [Contributing](CONTRIBUTING.md)

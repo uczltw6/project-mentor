@@ -90,3 +90,11 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Release-path hardening:** Check a skill root for symlinks before resolving it; retain nested-link rejection and destination confinement.
 - **Authenticity boundary:** Define ledgers and event actors as unsigned caller-supplied provenance, not authenticated identity or proof of truth.
 - **Repository gate:** Scan releasable worktree files and complete Git history without echoing matched content; run the same gate in full-history CI.
+
+## 2026-08-01 — Phase 10 installation and release rehearsal
+
+- **Installed discovery:** Locate the personal skill uniquely by frontmatter `name`, require the current `$HOME/.agents/skills/project-mentor` scope, a regular directory, no generated caches, official validation, and all documented helper commands.
+- **Portable parity:** Require byte equality between the personal installation and a fresh Git checkout. Normalize the Windows-generated `agents/openai.yaml` to the repository's LF policy after the first clean clone exposed a line-ending-only mismatch.
+- **Clean-clone gate:** Create a new clone and virtual environment, install documented development dependencies, and rerun lint, format, strict typing, tests, coverage, official validation, parity, and the repository/history scan.
+- **Semantic rehearsal:** Reuse the Phase 6 clean-context explicit invocation evidence rather than creating a less controlled duplicate. Keep the negative no-skill baseline in the release record.
+- **Tag boundary:** Do not tag from local success. Require the published final commit and hosted CI/CodeQL gates to pass first.
