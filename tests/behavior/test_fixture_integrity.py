@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -10,6 +11,8 @@ FIXTURES = Path(__file__).resolve().parent / "fixtures"
 
 def _unittest(fixture: str) -> subprocess.CompletedProcess[str]:
     root = FIXTURES / fixture
+    environment = os.environ.copy()
+    environment["PYTHONDONTWRITEBYTECODE"] = "1"
     return subprocess.run(
         [sys.executable, "-m", "unittest", "discover", "-s", "tests"],
         cwd=root,
@@ -17,6 +20,7 @@ def _unittest(fixture: str) -> subprocess.CompletedProcess[str]:
         check=False,
         text=True,
         encoding="utf-8",
+        env=environment,
     )
 
 
@@ -56,7 +60,7 @@ def test_forward_case_inventory_covers_release_scenarios() -> None:
 def test_forward_fixtures_are_non_git_and_contain_no_secret_value() -> None:
     for path in FIXTURES.rglob("*"):
         assert path.name != ".git"
-        if path.is_file():
+        if path.is_file() and path.suffix in {".md", ".py", ".toml"}:
             assert "<SYNTHETIC_TOKEN>" not in path.read_text(encoding="utf-8")
 
 

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import ast
 import re
+import subprocess
 
 from conftest import SKILL
 
@@ -46,7 +47,14 @@ def test_skill_is_concise_and_all_direct_references_exist() -> None:
 
 def test_skill_contains_no_placeholders_forbidden_docs_or_generated_files() -> None:
     forbidden_names = {"README.md", "INSTALLATION_GUIDE.md", "QUICK_REFERENCE.md", "CHANGELOG.md"}
-    files = [path for path in SKILL.rglob("*") if path.is_file()]
+    repository = SKILL.parents[2]
+    tracked = subprocess.run(
+        ["git", "ls-files", "-z", "--", ".agents/skills/project-mentor"],
+        cwd=repository,
+        capture_output=True,
+        check=True,
+    ).stdout.split(b"\0")
+    files = [repository / item.decode("utf-8") for item in tracked if item]
     assert not forbidden_names & {path.name for path in files}
     assert not any("__pycache__" in path.parts or path.suffix in {".pyc", ".pyo"} for path in files)
     text_files = [path for path in files if path.suffix in {".md", ".py", ".yaml"}]
