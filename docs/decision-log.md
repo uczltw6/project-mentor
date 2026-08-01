@@ -135,3 +135,15 @@ This log records release-relevant decisions without retaining private paths, cre
   stable exit classes, bounded UTF-8 input, and atomic revision-checked writes.
 - **Publication:** Make the wheel real and testable, but do not claim PyPI availability
   until a separately authorized upload and public-index verification succeeds.
+
+## 2026-08-01 — PyPI Trusted Publishing
+
+- **Identity:** Trust only `uczltw6/project-mentor`, `.github/workflows/release.yml`,
+  and the `pypi` GitHub Environment.
+- **Credentials:** Use GitHub OIDC short-lived credentials; store no PyPI token.
+- **Separation:** Build and validate without OIDC permission. Give `id-token: write`
+  only to the two-step publish job.
+- **Provenance:** Publish from an exact release tag with the pinned PyPA action and
+  its default attestations.
+- **Failure:** Do not skip existing files or silently overwrite a release; PyPI
+  versions and files are immutable.

@@ -190,10 +190,13 @@ redaction, event application, summaries, receipts, diagnostics, and anchor
 verification, install the standard-library-only command from a trusted checkout:
 
 ```bash
-python -m pip install .
+pipx install project-mentor==0.3.0
 project-mentor --version
 project-mentor doctor --project-root .
 ```
+
+For a project environment, use `python -m pip install project-mentor==0.3.0`.
+Source-checkout installation remains available with `python -m pip install .`.
 
 The installed executable and module entry point are equivalent:
 
@@ -252,8 +255,8 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - English and Chinese are supported behavior targets, but v0.1.0 does not claim
   comprehensive localization.
 - The skills-only plugin is not yet listed in an official or curated marketplace.
-- The CLI is package-ready, but no PyPI release is claimed until an artifact is
-  explicitly published and verified from the public index.
+- PyPI publication uses GitHub OIDC Trusted Publishing; no long-lived PyPI
+  credential is stored in the repository or release environment.
 
 ## Project links
 
@@ -265,6 +268,7 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - [v0.1.0 release readiness](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/release-readiness-v0.1.0.md)
 - [v0.2.0 release notes](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/release-notes-v0.2.0.md)
 - [v0.3.0 release notes](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/release-notes-v0.3.0.md)
+- [PyPI publishing](https://github.com/uczltw6/project-mentor/blob/main/docs/publishing.md)
 - [Threat model](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/threat-model.md)
 - [v0.1.0 security review](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/security-review-v0.1.0.md)
 - [Contributing](https://github.com/uczltw6/project-mentor/blob/v0.3.0/CONTRIBUTING.md)

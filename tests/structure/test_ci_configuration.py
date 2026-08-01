@@ -53,3 +53,25 @@ def test_codeql_and_dependabot_are_narrowly_configured() -> None:
     assert "package-ecosystem: github-actions" in dependabot
     assert "development-minor-and-patch" in dependabot
     assert "update-types:" in dependabot
+
+
+def test_pypi_release_workflow_is_separated_and_minimally_privileged() -> None:
+    release = (WORKFLOWS / "release.yml").read_text(encoding="utf-8")
+    for contract in (
+        "release:",
+        "types: [published]",
+        "workflow_dispatch:",
+        "needs: build",
+        "name: pypi",
+        "id-token: write",
+        "python-distributions",
+        "validate_distribution.py",
+        "smoke_test_wheel.py",
+        "pypa/gh-action-pypi-publish@",
+        "packages-dir: dist/",
+    ):
+        assert contract in release
+    assert release.count("id-token: write") == 1
+    assert "password:" not in release
+    assert "PYPI_TOKEN" not in release
+    assert "skip-existing" not in release
