@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "id": "evt-milestone-health-verified",
+  "timestamp": "2026-08-01T09:04:00Z",
+  "type": "milestone_completed",
+  "actor": "shared",
+  "payload": {
+    "milestone": {
+      "id": "milestone-health-verified",
+      "timestamp": "2026-08-01T09:04:00Z",
+      "title": "Health endpoint verified",
+      "result": "The endpoint contract passed its focused test.",
+      "concept_ids": [
+        "request-routing"
+      ],
+      "project_evidence": []
+    }
+  }
+}

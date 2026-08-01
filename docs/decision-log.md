@@ -63,3 +63,11 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Baseline:** Compare the guided endpoint case with a no-skill endpoint run. Both complete the same task and pass the same three focused tests, so the teaching behavior does not reduce correctness or completion on this fixture.
 - **Privacy:** Publish only sanitized prompts, numeric scores, and concise verification notes. Keep raw responses, local paths, and the synthetic secret outside the repository.
 - **Release result:** All 14 cases pass their applicable gates, earning 260 of 260 applicable rubric points. Treat this as evidence for the committed fixtures, not a universal claim about every host, project, or learner.
+
+## 2026-08-01 — Phase 7 public documentation
+
+- **Installation guidance:** Document `$HOME/.agents/skills/project-mentor` for personal use and `.agents/skills/project-mentor` for repository use, matching the current official Codex loading locations. Cover both explicit `$project-mentor` invocation and intent-based implicit activation.
+- **Public claim boundary:** Present v0.1.0 evaluation numbers with direct links to prompts, scoring, reproduction, and limitations. Avoid universal learning, security, or compatibility claims.
+- **Example provenance:** Generate the example ledger and receipt with the released helper from four committed strict events and test byte-for-byte regeneration.
+- **Architecture boundary:** Describe host-agent semantic reasoning separately from the standard-library helper's deterministic validation, redaction, event, persistence, and rendering responsibilities.
+- **Community surface:** Add contribution, conduct, security, issue, and pull-request guidance with explicit secret and private-data hygiene.

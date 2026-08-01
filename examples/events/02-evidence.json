@@ -1,0 +1,20 @@
+{
+  "schema_version": 1,
+  "id": "evt-evidence-route-test",
+  "timestamp": "2026-08-01T09:02:00Z",
+  "type": "project_evidence_added",
+  "actor": "agent",
+  "payload": {
+    "concept_id": "request-routing",
+    "evidence": {
+      "schema_version": 1,
+      "id": "ev-health-route-test",
+      "class": "observed",
+      "kind": "test_result",
+      "locator": "tests/test_app.py::test_health",
+      "summary": "The focused health-route test passed.",
+      "exit_status": 0,
+      "observed_at": "2026-08-01T09:02:00Z"
+    }
+  }
+}

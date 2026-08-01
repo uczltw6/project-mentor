@@ -1,0 +1,164 @@
+{
+  "concepts": [
+    {
+      "classification": "explain_when_encountered",
+      "id": "request-routing",
+      "next_practice": "Add one failing test for an unknown route and explain the expected status.",
+      "plain_language": "A route connects an HTTP method and path to the function that handles it.",
+      "prerequisites": [],
+      "project_evidence": [
+        {
+          "class": "observed",
+          "exit_status": 0,
+          "id": "ev-health-route-test",
+          "kind": "test_result",
+          "locator": "tests/test_app.py::test_health",
+          "observed_at": "2026-08-01T09:02:00Z",
+          "schema_version": 1,
+          "summary": "The focused health-route test passed."
+        }
+      ],
+      "risks_if_changed": [
+        "Changing the method or path would break callers and focused tests."
+      ],
+      "title": "Request routing",
+      "user_learning": {
+        "demonstrations": [],
+        "exposure": "encountered"
+      },
+      "why_now": "The new health endpoint needs a stable entry point."
+    }
+  ],
+  "decisions": [
+    {
+      "alternatives": [
+        "Include dependency diagnostics in the public response."
+      ],
+      "concept_ids": [
+        "request-routing"
+      ],
+      "id": "decision-health-contract",
+      "project_evidence": [],
+      "rationale": "A stable status-only body is easier to consume and reveals less operational detail.",
+      "summary": "Keep the health response minimal and deterministic.",
+      "timestamp": "2026-08-01T09:03:00Z"
+    }
+  ],
+  "deferred": [],
+  "events": [
+    {
+      "actor": "agent",
+      "id": "evt-concept-routing",
+      "payload": {
+        "concept": {
+          "classification": "explain_when_encountered",
+          "id": "request-routing",
+          "next_practice": "Add one failing test for an unknown route and explain the expected status.",
+          "plain_language": "A route connects an HTTP method and path to the function that handles it.",
+          "prerequisites": [],
+          "project_evidence": [],
+          "risks_if_changed": [
+            "Changing the method or path would break callers and focused tests."
+          ],
+          "title": "Request routing",
+          "user_learning": {
+            "demonstrations": [],
+            "exposure": "not_seen"
+          },
+          "why_now": "The new health endpoint needs a stable entry point."
+        }
+      },
+      "schema_version": 1,
+      "timestamp": "2026-08-01T09:01:00Z",
+      "type": "concept_identified"
+    },
+    {
+      "actor": "agent",
+      "id": "evt-evidence-route-test",
+      "payload": {
+        "concept_id": "request-routing",
+        "evidence": {
+          "class": "observed",
+          "exit_status": 0,
+          "id": "ev-health-route-test",
+          "kind": "test_result",
+          "locator": "tests/test_app.py::test_health",
+          "observed_at": "2026-08-01T09:02:00Z",
+          "schema_version": 1,
+          "summary": "The focused health-route test passed."
+        }
+      },
+      "schema_version": 1,
+      "timestamp": "2026-08-01T09:02:00Z",
+      "type": "project_evidence_added"
+    },
+    {
+      "actor": "shared",
+      "id": "evt-decision-health-contract",
+      "payload": {
+        "decision": {
+          "alternatives": [
+            "Include dependency diagnostics in the public response."
+          ],
+          "concept_ids": [
+            "request-routing"
+          ],
+          "id": "decision-health-contract",
+          "project_evidence": [],
+          "rationale": "A stable status-only body is easier to consume and reveals less operational detail.",
+          "summary": "Keep the health response minimal and deterministic.",
+          "timestamp": "2026-08-01T09:03:00Z"
+        }
+      },
+      "schema_version": 1,
+      "timestamp": "2026-08-01T09:03:00Z",
+      "type": "decision_recorded"
+    },
+    {
+      "actor": "shared",
+      "id": "evt-milestone-health-verified",
+      "payload": {
+        "milestone": {
+          "concept_ids": [
+            "request-routing"
+          ],
+          "id": "milestone-health-verified",
+          "project_evidence": [],
+          "result": "The endpoint contract passed its focused test.",
+          "timestamp": "2026-08-01T09:04:00Z",
+          "title": "Health endpoint verified"
+        }
+      },
+      "schema_version": 1,
+      "timestamp": "2026-08-01T09:04:00Z",
+      "type": "milestone_completed"
+    }
+  ],
+  "evidence_gaps": [],
+  "milestones": [
+    {
+      "concept_ids": [
+        "request-routing"
+      ],
+      "id": "milestone-health-verified",
+      "project_evidence": [],
+      "result": "The endpoint contract passed its focused test.",
+      "timestamp": "2026-08-01T09:04:00Z",
+      "title": "Health endpoint verified"
+    }
+  ],
+  "project": {
+    "baseline": "main",
+    "root_label": "sample-api",
+    "vcs": "git"
+  },
+  "revision": 4,
+  "schema_version": 1,
+  "session": {
+    "created_at": "2026-08-01T09:00:00Z",
+    "goal": "Add and verify a health endpoint",
+    "id": "pm-example-health",
+    "mode": "guided",
+    "updated_at": "2026-08-01T09:04:00Z"
+  }
+}

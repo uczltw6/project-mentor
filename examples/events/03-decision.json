@@ -1,0 +1,22 @@
+{
+  "schema_version": 1,
+  "id": "evt-decision-health-contract",
+  "timestamp": "2026-08-01T09:03:00Z",
+  "type": "decision_recorded",
+  "actor": "shared",
+  "payload": {
+    "decision": {
+      "id": "decision-health-contract",
+      "timestamp": "2026-08-01T09:03:00Z",
+      "summary": "Keep the health response minimal and deterministic.",
+      "alternatives": [
+        "Include dependency diagnostics in the public response."
+      ],
+      "rationale": "A stable status-only body is easier to consume and reveals less operational detail.",
+      "concept_ids": [
+        "request-routing"
+      ],
+      "project_evidence": []
+    }
+  }
+}

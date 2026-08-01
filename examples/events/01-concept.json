@@ -1,0 +1,26 @@
+{
+  "schema_version": 1,
+  "id": "evt-concept-routing",
+  "timestamp": "2026-08-01T09:01:00Z",
+  "type": "concept_identified",
+  "actor": "agent",
+  "payload": {
+    "concept": {
+      "id": "request-routing",
+      "title": "Request routing",
+      "plain_language": "A route connects an HTTP method and path to the function that handles it.",
+      "classification": "explain_when_encountered",
+      "why_now": "The new health endpoint needs a stable entry point.",
+      "prerequisites": [],
+      "project_evidence": [],
+      "user_learning": {
+        "exposure": "not_seen",
+        "demonstrations": []
+      },
+      "risks_if_changed": [
+        "Changing the method or path would break callers and focused tests."
+      ],
+      "next_practice": "Add one failing test for an unknown route and explain the expected status."
+    }
+  }
+}

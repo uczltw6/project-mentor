@@ -1,0 +1,53 @@
+name: Bug report
+description: Report a reproducible problem without private data
+title: "[Bug]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: Do not include credentials, private project content, or raw model reasoning. Use the private security advisory form for vulnerabilities.
+  - type: input
+    id: version
+    attributes:
+      label: Version or commit
+      placeholder: v0.1.0
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Host surface
+      options:
+        - Codex desktop
+        - Codex CLI
+        - Codex IDE extension
+        - Compatible host
+        - Python helper only
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal synthetic reproduction
+      description: Include commands and fixture content only after removing private paths and secrets.
+    validations:
+      required: true
+  - type: checkboxes
+    id: hygiene
+    attributes:
+      label: Data hygiene
+      options:
+        - label: I removed credentials, personal data, private project content, and raw hidden reasoning.
+          required: true
