@@ -179,19 +179,22 @@ Use `en` or `zh` for language. Rendering selects up to five active concepts by d
 
 ## CLI
 
-Run from the skill directory:
+Use the installed `project-mentor` command when available. The equivalent
+module entry point is `python -m project_mentor_cli`. From an unpacked skill,
+replace `project-mentor` below with `python scripts/project_mentor.py`.
 
 ```text
-python scripts/project_mentor.py init --goal "Run the project" --session-id pm-example --created-at 2026-08-01T00:00:00Z --vcs git --output ledger.json
-python scripts/project_mentor.py apply-event --ledger ledger.json --event event.json --expected-revision 0
-python scripts/project_mentor.py validate --kind ledger --input ledger.json
-python scripts/project_mentor.py render --ledger ledger.json --language en --rendered-at 2026-08-01T00:10:00Z --output learning-receipt.md
-python scripts/project_mentor.py render --ledger ledger.json --format json --rendered-at 2026-08-01T00:10:00Z --output receipt.json
-python scripts/project_mentor.py summarize --ledger ledger.json --output summary.json
-python scripts/project_mentor.py redact --input command.txt
-python scripts/project_mentor.py doctor --project-root . --ledger ledger.json
-python scripts/project_mentor.py verify-anchors --ledger ledger.json --root .
-python scripts/project_mentor.py verify-anchors --ledger ledger.json --root . --write --expected-revision 3 --checked-at 2026-08-01T00:20:00Z
+project-mentor --version
+project-mentor init --goal "Run the project" --session-id pm-example --created-at 2026-08-01T00:00:00Z --vcs git --output ledger.json
+project-mentor apply-event --ledger ledger.json --event event.json --expected-revision 0
+project-mentor validate --kind ledger --input ledger.json
+project-mentor render --ledger ledger.json --language en --rendered-at 2026-08-01T00:10:00Z --output learning-receipt.md
+project-mentor render --ledger ledger.json --format json --rendered-at 2026-08-01T00:10:00Z --output receipt.json
+project-mentor summarize --ledger ledger.json --output summary.json
+project-mentor redact --input command.txt
+project-mentor doctor --project-root . --ledger ledger.json
+project-mentor verify-anchors --ledger ledger.json --root .
+project-mentor verify-anchors --ledger ledger.json --root . --write --expected-revision 3 --checked-at 2026-08-01T00:20:00Z
 ```
 
 Use `-` for stdin or stdout where the command supports it. `apply-event` always requires an explicit ledger path and expected revision because it performs persistent atomic replacement. `doctor` checks Python, required skill files, the project directory, and an optional ledger without exposing absolute paths. `verify-anchors` understands `path#sha256=<digest>`, `path::symbol`, `path#config-key`, and `path::test-name`; unsafe, malformed, symlinked, non-local, oversized, or changing evidence is reported as `unavailable` rather than guessed. Text verification is capped at 1 MiB and digest verification at 16 MiB. Reports identify the ledger evidence ID and a SHA-256 of its locator instead of copying the possibly sensitive locator. Verification is read-only unless `--write` and the current expected revision are both supplied.
@@ -212,6 +215,7 @@ Expected failures print a concise error without a traceback. Use the global `--d
 ## Compatibility and safety
 
 - Support schema version 1 only. Reject a future version without modifying the file.
+- Keep CLI semantic versioning independent from the persisted schema version.
 - Reject unknown fields rather than silently losing them.
 - Limit each input to 1 MiB and require UTF-8.
 - Reject duplicate JSON object keys rather than applying last-value-wins parsing.

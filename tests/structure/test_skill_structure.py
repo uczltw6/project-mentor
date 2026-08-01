@@ -121,3 +121,4 @@ def test_required_helper_subcommands_are_documented() -> None:
         "verify-anchors",
     ):
         assert f"project_mentor.py {command}" in skill_text
+    assert "project-mentor --version" in skill_text

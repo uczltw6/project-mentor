@@ -3,6 +3,22 @@
 All notable changes to Project Mentor are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## [0.3.0] — 2026-08-01
+
+### Added
+
+- A real `project-mentor` Python distribution and console script.
+- An equivalent `python -m project_mentor_cli` entry point and stable `--version` output.
+- A documented command, stdout/stderr, exit-code, and compatibility contract.
+- Distribution metadata, wheel, source-distribution, entry-point, and
+  installed-lifecycle verification.
+
+### Changed
+
+- Release distributions now contain the standard-library runtime instead of
+  metadata only.
+- CLI and ledger schema versions are explicitly independent compatibility boundaries.
+
 ## [0.2.0] — 2026-08-01
 
 ### Added
@@ -37,3 +53,4 @@ All notable changes to Project Mentor are documented here. The project follows
 
 [0.1.0]: https://github.com/uczltw6/project-mentor/releases/tag/v0.1.0
 [0.2.0]: https://github.com/uczltw6/project-mentor/releases/tag/v0.2.0
+[0.3.0]: https://github.com/uczltw6/project-mentor/releases/tag/v0.3.0

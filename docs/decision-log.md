@@ -122,3 +122,16 @@ This log records release-relevant decisions without retaining private paths, cre
   explicitly unavailable rather than guessing it.
 - **Package registry:** Do not publish the metadata-only development wheel to PyPI. Revisit
   PyPI only after defining a real standalone runtime package and public CLI contract.
+
+## 2026-08-01 — v0.3 CLI contract
+
+- **Public command:** Use `project-mentor` for the console script and
+  `python -m project_mentor_cli` for module execution.
+- **Single runtime:** Package the existing skill helper source under the installed
+  `project_mentor_cli` name instead of creating another copy to synchronize.
+- **Compatibility:** Preserve every v0.2 subcommand and schema version 1. Treat CLI
+  semantic version and ledger schema version as independent contracts.
+- **Output and failure:** Keep command results on stdout, expected diagnostics on stderr,
+  stable exit classes, bounded UTF-8 input, and atomic revision-checked writes.
+- **Publication:** Make the wheel real and testable, but do not claim PyPI availability
+  until a separately authorized upload and public-index verification succeeds.

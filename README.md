@@ -6,7 +6,7 @@ slowing down delivery.
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](https://www.python.org/)
 [![CI](https://github.com/uczltw6/project-mentor/actions/workflows/ci.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/uczltw6/project-mentor/actions/workflows/codeql.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/codeql.yml)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/uczltw6/project-mentor/blob/v0.3.0/LICENSE)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-open%20standard-5A67D8.svg)](https://agentskills.io/)
 
 Project Mentor is a standalone Agent Skill for Codex and compatible hosts. It
@@ -92,7 +92,7 @@ or curated marketplace listing.
 Ask the built-in installer:
 
 ```text
-$skill-installer install project-mentor from https://github.com/uczltw6/project-mentor/tree/v0.2.0/.agents/skills/project-mentor
+$skill-installer install project-mentor from https://github.com/uczltw6/project-mentor/tree/v0.3.0/.agents/skills/project-mentor
 ```
 
 Or install manually into an empty destination.
@@ -100,7 +100,7 @@ Or install manually into an empty destination.
 macOS/Linux:
 
 ```bash
-git clone --depth 1 --branch v0.2.0 https://github.com/uczltw6/project-mentor.git
+git clone --depth 1 --branch v0.3.0 https://github.com/uczltw6/project-mentor.git
 mkdir -p "$HOME/.agents/skills"
 cp -R project-mentor/.agents/skills/project-mentor "$HOME/.agents/skills/project-mentor"
 test -f "$HOME/.agents/skills/project-mentor/SKILL.md"
@@ -109,7 +109,7 @@ test -f "$HOME/.agents/skills/project-mentor/SKILL.md"
 Windows PowerShell:
 
 ```powershell
-git clone --depth 1 --branch v0.2.0 https://github.com/uczltw6/project-mentor.git
+git clone --depth 1 --branch v0.3.0 https://github.com/uczltw6/project-mentor.git
 New-Item -ItemType Directory -Force "$HOME\.agents\skills" | Out-Null
 Copy-Item -Recurse "project-mentor\.agents\skills\project-mentor" "$HOME\.agents\skills\project-mentor"
 Test-Path "$HOME\.agents\skills\project-mentor\SKILL.md"
@@ -156,9 +156,9 @@ should not activate the skill solely because code is involved.
 
 ## Example receipt and ledger
 
-The committed [example receipt](examples/learning-receipt.md) was generated
-deterministically from the [example ledger](examples/project-mentor-ledger.json)
-and [four input events](examples/events). It records:
+The committed [example receipt](https://github.com/uczltw6/project-mentor/blob/v0.3.0/examples/learning-receipt.md) was generated
+deterministically from the [example ledger](https://github.com/uczltw6/project-mentor/blob/v0.3.0/examples/project-mentor-ledger.json)
+and [four input events](https://github.com/uczltw6/project-mentor/tree/v0.3.0/examples/events). It records:
 
 - the verified health-endpoint milestone;
 - request routing anchored to a named focused test;
@@ -180,41 +180,51 @@ and [four input events](examples/events). It records:
 - Repository instructions and source files are treated as untrusted data when
   they conflict with the user's request or higher-priority instructions.
 
-See the [threat model](docs/threat-model.md) and [security policy](SECURITY.md)
+See the [threat model](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/threat-model.md) and [security policy](https://github.com/uczltw6/project-mentor/blob/v0.3.0/SECURITY.md)
 for the complete boundary.
 
-## Optional Python helper
+## Command-line interface
 
-The mentoring workflow does not require Python. The deterministic helper needs
-Python 3.10 or newer only when local validation, redaction, event application,
-summarization, receipt rendering, diagnostics, or anchor verification is useful.
-
-From the installed skill directory:
+The mentoring workflow does not require the CLI. For deterministic validation,
+redaction, event application, summaries, receipts, diagnostics, and anchor
+verification, install the standard-library-only command from a trusted checkout:
 
 ```bash
-python scripts/project_mentor.py --help
-python scripts/project_mentor.py validate --kind ledger --input ledger.json
-python scripts/project_mentor.py render --ledger ledger.json --output learning-receipt.md
-python scripts/project_mentor.py render --ledger ledger.json --format json --output receipt.json
-python scripts/project_mentor.py doctor --project-root . --ledger ledger.json
+python -m pip install .
+project-mentor --version
+project-mentor doctor --project-root .
+```
+
+The installed executable and module entry point are equivalent:
+
+```bash
+project-mentor validate --kind ledger --input ledger.json
+python -m project_mentor_cli render --ledger ledger.json --output learning-receipt.md
+```
+
+Without package installation, use the bundled fallback from the skill directory:
+
+```bash
+python scripts/project_mentor.py --version
 python scripts/project_mentor.py verify-anchors --ledger ledger.json --root .
 ```
 
-The helper accepts schema version 1, limits input to 1 MiB, validates unknown
-fields, uses optimistic revisions and idempotent event IDs, and atomically
-replaces existing ledgers. Its stable exit codes are documented in
-[`ledger-schema.md`](.agents/skills/project-mentor/references/ledger-schema.md).
+All entry points call the same implementation. The complete command, output,
+compatibility, and exit-code contract is in [`docs/cli.md`](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/cli.md).
 
 ## Develop and test
 
 ```bash
 python -m venv .venv
-python -m pip install ".[dev]"
+python -m pip install -e ".[dev]"
 python -m ruff check .
 python -m ruff format --check .
 python -m mypy --strict .agents/skills/project-mentor/scripts tools
 python -m coverage run --branch -m pytest -q
 python -m coverage report
+python -m build --no-isolation --outdir <temporary-directory> .
+python tools/validate_distribution.py --dist-dir <temporary-directory> --version 0.3.0
+python tools/smoke_test_wheel.py --dist-dir <temporary-directory> --version 0.3.0 --skill-root .agents/skills/project-mentor
 python tools/sync_skill.py --check
 python tools/run_official_plugin_validation.py --plugin .
 python tools/repository_scan.py --all
@@ -224,7 +234,7 @@ The test suite covers schema and event behavior, redaction, atomic writes,
 rendering, the CLI lifecycle, public/personal parity tools, skill structure,
 and behavioral fixtures. The v0.1.0 forward evaluation passed 14/14 isolated
 cases with 260/260 applicable rubric points; read the exact, bounded claims in
-[`docs/evaluation.md`](docs/evaluation.md).
+[`docs/evaluation.md`](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/evaluation.md).
 
 ## Limitations
 
@@ -242,20 +252,22 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - English and Chinese are supported behavior targets, but v0.1.0 does not claim
   comprehensive localization.
 - The skills-only plugin is not yet listed in an official or curated marketplace.
-- The development `pyproject.toml` intentionally builds no runtime package; PyPI
-  publication remains out of scope until a real standalone package contract exists.
+- The CLI is package-ready, but no PyPI release is claimed until an artifact is
+  explicitly published and verified from the public index.
 
 ## Project links
 
-- [Skill instructions](.agents/skills/project-mentor/SKILL.md)
-- [Architecture](docs/architecture.md)
-- [Product contract](docs/product-contract.md)
-- [Evaluation and reproduction](docs/evaluation.md)
-- [v0.1.0 release readiness](docs/release-readiness-v0.1.0.md)
-- [v0.2.0 release notes](docs/release-notes-v0.2.0.md)
-- [Threat model](docs/threat-model.md)
-- [v0.1.0 security review](docs/security-review-v0.1.0.md)
-- [Contributing](CONTRIBUTING.md)
-- [Security policy](SECURITY.md)
-- [Changelog](CHANGELOG.md)
-- [MIT license](LICENSE)
+- [Skill instructions](https://github.com/uczltw6/project-mentor/blob/v0.3.0/.agents/skills/project-mentor/SKILL.md)
+- [Architecture](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/architecture.md)
+- [CLI contract](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/cli.md)
+- [Product contract](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/product-contract.md)
+- [Evaluation and reproduction](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/evaluation.md)
+- [v0.1.0 release readiness](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/release-readiness-v0.1.0.md)
+- [v0.2.0 release notes](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/release-notes-v0.2.0.md)
+- [v0.3.0 release notes](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/release-notes-v0.3.0.md)
+- [Threat model](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/threat-model.md)
+- [v0.1.0 security review](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/security-review-v0.1.0.md)
+- [Contributing](https://github.com/uczltw6/project-mentor/blob/v0.3.0/CONTRIBUTING.md)
+- [Security policy](https://github.com/uczltw6/project-mentor/blob/v0.3.0/SECURITY.md)
+- [Changelog](https://github.com/uczltw6/project-mentor/blob/v0.3.0/CHANGELOG.md)
+- [MIT license](https://github.com/uczltw6/project-mentor/blob/v0.3.0/LICENSE)

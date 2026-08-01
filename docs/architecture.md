@@ -29,6 +29,18 @@ flowchart LR
 | Python helper | Validation, redaction, canonical ordering, event transitions, atomic persistence, rendering, summaries, diagnostics, and explicit local anchor checks | Does not scan repositories broadly, teach, call models, access a network, or execute recorded commands |
 | Repository tooling | Personal/public/plugin synchronization and official validator discovery | Is not part of the installed runtime workflow |
 
+## CLI distribution
+
+The `project-mentor` wheel maps the same `mentor_core` source directory to the
+installed `project_mentor_cli` package. The `project-mentor` console script,
+`python -m project_mentor_cli`, and the bundled `scripts/project_mentor.py`
+therefore share validation, redaction, persistence, rendering, diagnostics, and
+exit-code behavior without maintaining another runtime copy.
+
+The distribution version is a product-release contract. Ledger
+`schema_version` is a persisted-data contract and remains independently
+validated. Building or installing the wheel adds no runtime dependency.
+
 ## Skill package
 
 The standalone release artifact is `.agents/skills/project-mentor`; the
@@ -46,9 +58,12 @@ project-mentor/
 └── scripts/
     ├── project_mentor.py
     └── mentor_core/
+        ├── __init__.py
+        ├── __main__.py
         ├── anchors.py
         ├── cli.py
         ├── doctor.py
+        ├── errors.py
         ├── events.py
         ├── io.py
         ├── model.py

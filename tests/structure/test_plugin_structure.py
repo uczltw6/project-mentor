@@ -17,7 +17,7 @@ def test_plugin_manifest_is_skills_only_and_release_ready() -> None:
         (REPOSITORY / ".codex-plugin" / "plugin.json").read_text(encoding="utf-8")
     )
     assert manifest["name"] == "project-mentor"
-    assert manifest["version"] == "0.2.0"
+    assert manifest["version"] == "0.3.0"
     assert manifest["skills"] == "./skills/"
     assert "apps" not in manifest and "mcpServers" not in manifest
     assert manifest["repository"] == "https://github.com/uczltw6/project-mentor"

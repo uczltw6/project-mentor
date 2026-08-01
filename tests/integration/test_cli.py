@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import io
 import json
+import runpy
 import subprocess
 import sys
 from copy import deepcopy
@@ -11,6 +12,12 @@ from typing import Any
 import pytest
 from conftest import assert_no_secret
 from mentor_core import cli
+
+
+def test_module_entry_point_propagates_the_cli_exit_code(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setattr(cli, "main", lambda: 17)
+    with pytest.raises(SystemExit, match="17"):
+        runpy.run_module("mentor_core.__main__", run_name="__main__")
 
 
 class StdinBytes:
