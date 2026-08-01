@@ -153,6 +153,24 @@ def test_complete_cli_lifecycle_is_deterministic_and_atomic(
             == 0
         )
     assert first.read_bytes() == second.read_bytes()
+    receipt_json = directory / "receipt.json"
+    assert (
+        cli.main(
+            [
+                "render",
+                "--ledger",
+                str(ledger_path),
+                "--format",
+                "json",
+                "--rendered-at",
+                "2026-08-01T00:10:00Z",
+                "--output",
+                str(receipt_json),
+            ]
+        )
+        == 0
+    )
+    assert json.loads(receipt_json.read_text(encoding="utf-8"))["session_id"] == "pm-cli-session"
     assert (
         cli.main(
             [
@@ -314,4 +332,103 @@ def test_entry_script_help_runs_without_installing_package() -> None:
         encoding="utf-8",
     )
     assert completed.returncode == 0
-    assert "apply-event" in completed.stdout and "render" in completed.stdout
+    assert "apply-event" in completed.stdout and "verify-anchors" in completed.stdout
+
+
+def test_doctor_and_verify_anchors_cli_can_write_stale_state(
+    tmp_path: Path,
+    ledger: dict[str, Any],
+    concept: dict[str, Any],
+    capsys: Any,
+) -> None:
+    skill = Path(__file__).resolve().parents[2] / ".agents" / "skills" / "project-mentor"
+    anchor = tmp_path / "settings.toml"
+    anchor.write_text("enabled = true\n", encoding="utf-8")
+    concept["project_evidence"] = [
+        {
+            "schema_version": 1,
+            "id": "ev-cli-anchor",
+            "class": "observed",
+            "kind": "config_key",
+            "locator": "settings.toml#missing_key",
+            "summary": "Synthetic setting.",
+        }
+    ]
+    ledger["concepts"] = [concept]
+    ledger_path = tmp_path / "ledger.json"
+    _write_json(ledger_path, ledger)
+
+    assert (
+        cli.main(
+            [
+                "doctor",
+                "--skill-root",
+                str(skill),
+                "--project-root",
+                str(tmp_path),
+                "--ledger",
+                str(ledger_path),
+            ]
+        )
+        == 0
+    )
+    assert json.loads(capsys.readouterr().out)["status"] == "ok"
+
+    assert (
+        cli.main(
+            [
+                "verify-anchors",
+                "--ledger",
+                str(ledger_path),
+                "--root",
+                str(tmp_path),
+                "--write",
+                "--expected-revision",
+                "0",
+                "--checked-at",
+                "2026-08-01T00:02:00Z",
+            ]
+        )
+        == 0
+    )
+    report = json.loads(capsys.readouterr().out)
+    assert report["written_events"] == 1 and report["revision"] == 1
+    persisted = json.loads(ledger_path.read_text(encoding="utf-8"))
+    assert persisted["concepts"][0]["project_evidence"][0]["class"] == "stale"
+
+
+def test_read_commands_refuse_to_overwrite_their_input(
+    tmp_path: Path, ledger: dict[str, Any], capsys: Any
+) -> None:
+    ledger_path = tmp_path / "ledger.json"
+    _write_json(ledger_path, ledger)
+    before = ledger_path.read_bytes()
+    assert (
+        cli.main(
+            [
+                "render",
+                "--ledger",
+                str(ledger_path),
+                "--output",
+                str(ledger_path),
+            ]
+        )
+        == 2
+    )
+    assert ledger_path.read_bytes() == before
+    assert "must be different" in capsys.readouterr().err
+    assert (
+        cli.main(
+            [
+                "verify-anchors",
+                "--ledger",
+                str(ledger_path),
+                "--root",
+                str(tmp_path),
+                "--expected-revision",
+                "0",
+            ]
+        )
+        == 2
+    )
+    assert "require --write" in capsys.readouterr().err

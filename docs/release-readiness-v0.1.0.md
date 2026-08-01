@@ -2,9 +2,9 @@
 
 ## Candidate status
 
-The local v0.1.0 candidate passed every pre-release gate on 2026-08-01. The
-public repository is available, but hosted CI and CodeQL must pass on the final
-commit before tagging and the GitHub release.
+The v0.1.0 release passed every pre-release gate on 2026-08-01. Hosted CI and
+CodeQL subsequently passed on the published commit before the tag and GitHub
+release were created.
 
 | Gate | Result |
 | --- | --- |
@@ -60,4 +60,4 @@ baseline were already exercised in the isolated forward evaluation.
 This checklist demonstrates release-process results for the committed candidate.
 It does not establish universal host behavior, perfect secret recognition,
 authenticated ledger authorship, or user mastery. Hosted GitHub Actions and the
-public anonymous-install path remain mandatory release gates for v0.1.0.
+public anonymous-install path were treated as mandatory release gates for v0.1.0.

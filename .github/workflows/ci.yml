@@ -141,5 +141,26 @@ jobs:
         run: python tools/sync_skill.py --check
       - name: Run official skill validation
         run: python tools/run_official_skill_validation.py --skill .agents/skills/project-mentor --validator _official-skills/skills/.system/skill-creator/scripts/quick_validate.py
-      - name: Run repository structure tests
+      - name: Run repository and plugin contract tests
         run: python -m pytest tests/structure -q
+
+  gate:
+    name: CI Gate
+    if: ${{ always() }}
+    needs: [quality, linux-tests, windows-tests, coverage, skill-structure]
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require every CI job to succeed
+        env:
+          JOB_RESULTS: ${{ toJSON(needs) }}
+        run: |
+          python - <<'PY'
+          import json
+          import os
+          import sys
+
+          results = {name: job["result"] for name, job in json.loads(os.environ["JOB_RESULTS"]).items()}
+          print(json.dumps(results, sort_keys=True))
+          sys.exit(0 if all(result == "success" for result in results.values()) else 1)
+          PY

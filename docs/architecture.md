@@ -16,6 +16,7 @@ flowchart LR
     P --> V["Validate + redact + apply atomically"]
     V --> L["ledger.json"]
     L --> M["Deterministic render/summary"]
+    L --> A["Read-only anchor verification"]
 ```
 
 ## Responsibilities
@@ -25,12 +26,14 @@ flowchart LR
 | Host agent | Activation, repository inspection, concept selection, intervention timing, engineering work, evidence judgment | Must not use agent work as proof of user capability |
 | `SKILL.md` | Operating workflow, mode behavior, evidence boundaries, failure behavior | Does not persist state or run code by itself |
 | References | Detailed mentoring policy, ledger contract, calibration examples | Are loaded only when relevant |
-| Python helper | Validation, redaction, canonical ordering, event transitions, atomic persistence, rendering, summaries | Does not scan repositories, teach, call models, access a network, or execute recorded commands |
-| Repository tooling | Canonical/public synchronization and official validator discovery | Is not part of the installed runtime workflow |
+| Python helper | Validation, redaction, canonical ordering, event transitions, atomic persistence, rendering, summaries, diagnostics, and explicit local anchor checks | Does not scan repositories broadly, teach, call models, access a network, or execute recorded commands |
+| Repository tooling | Personal/public/plugin synchronization and official validator discovery | Is not part of the installed runtime workflow |
 
 ## Skill package
 
-The release artifact is `.agents/skills/project-mentor`:
+The standalone release artifact is `.agents/skills/project-mentor`; the
+skills-only plugin mirrors it at `skills/project-mentor` and declares it from
+`.codex-plugin/plugin.json`:
 
 ```text
 project-mentor/
@@ -43,7 +46,9 @@ project-mentor/
 └── scripts/
     ├── project_mentor.py
     └── mentor_core/
+        ├── anchors.py
         ├── cli.py
+        ├── doctor.py
         ├── events.py
         ├── io.py
         ├── model.py
@@ -52,9 +57,10 @@ project-mentor/
         └── validate.py
 ```
 
-The personal installation is the canonical authoring source during development.
-`tools/sync_skill.py` checks or writes the public nested copy and requires exact
-release-file parity.
+The personal installation remains the canonical authoring source during the
+documented release workflow. `tools/sync_skill.py` checks or writes both public
+copies and requires exact release-file parity across personal, standalone, and
+plugin locations.
 
 ## Semantic workflow
 
@@ -94,6 +100,12 @@ Input is UTF-8, capped at 1 MiB, and rejected on unknown fields or unsupported
 versions. The helper validates and redacts a new document, writes a temporary
 file in the target directory, flushes it, rechecks the expected original, and
 atomically replaces the target. Existing symlink targets are refused.
+
+`doctor` is read-only. `verify-anchors` resolves only documented relative local
+locators beneath an explicit project root, refuses symlink traversal, and calls
+unsupported evidence `unavailable`. Its optional write mode uses the same
+revision check, event validation, redaction, and atomic replacement path as
+other ledger mutations.
 
 Expected failures map to stable exit classes: invalid input (2), revision or
 content conflict (3), I/O/path safety (4), and conflicting replay (5). The prior

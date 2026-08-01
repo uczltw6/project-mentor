@@ -80,12 +80,19 @@ repository skills from `.agents/skills`. See the official
 [Build skills documentation](https://developers.openai.com/codex/skills) for
 the current loading and invocation model.
 
+The repository also contains a skills-only Codex plugin manifest at
+`.codex-plugin/plugin.json`; its installable copy under `skills/project-mentor`
+is byte-for-byte identical to the repository-scoped skill. It adds no MCP
+server, app connector, network access, or extra permission. The plugin bundle
+is ready for a local or team marketplace, but is not represented as an official
+or curated marketplace listing.
+
 ### Personal installation
 
 Ask the built-in installer:
 
 ```text
-$skill-installer install project-mentor from https://github.com/uczltw6/project-mentor/tree/v0.1.0/.agents/skills/project-mentor
+$skill-installer install project-mentor from https://github.com/uczltw6/project-mentor/tree/v0.2.0/.agents/skills/project-mentor
 ```
 
 Or install manually into an empty destination.
@@ -93,7 +100,7 @@ Or install manually into an empty destination.
 macOS/Linux:
 
 ```bash
-git clone --depth 1 --branch v0.1.0 https://github.com/uczltw6/project-mentor.git
+git clone --depth 1 --branch v0.2.0 https://github.com/uczltw6/project-mentor.git
 mkdir -p "$HOME/.agents/skills"
 cp -R project-mentor/.agents/skills/project-mentor "$HOME/.agents/skills/project-mentor"
 test -f "$HOME/.agents/skills/project-mentor/SKILL.md"
@@ -102,7 +109,7 @@ test -f "$HOME/.agents/skills/project-mentor/SKILL.md"
 Windows PowerShell:
 
 ```powershell
-git clone --depth 1 --branch v0.1.0 https://github.com/uczltw6/project-mentor.git
+git clone --depth 1 --branch v0.2.0 https://github.com/uczltw6/project-mentor.git
 New-Item -ItemType Directory -Force "$HOME\.agents\skills" | Out-Null
 Copy-Item -Recurse "project-mentor\.agents\skills\project-mentor" "$HOME\.agents\skills\project-mentor"
 Test-Path "$HOME\.agents\skills\project-mentor\SKILL.md"
@@ -180,7 +187,7 @@ for the complete boundary.
 
 The mentoring workflow does not require Python. The deterministic helper needs
 Python 3.10 or newer only when local validation, redaction, event application,
-summarization, or receipt rendering is useful.
+summarization, receipt rendering, diagnostics, or anchor verification is useful.
 
 From the installed skill directory:
 
@@ -188,6 +195,9 @@ From the installed skill directory:
 python scripts/project_mentor.py --help
 python scripts/project_mentor.py validate --kind ledger --input ledger.json
 python scripts/project_mentor.py render --ledger ledger.json --output learning-receipt.md
+python scripts/project_mentor.py render --ledger ledger.json --format json --output receipt.json
+python scripts/project_mentor.py doctor --project-root . --ledger ledger.json
+python scripts/project_mentor.py verify-anchors --ledger ledger.json --root .
 ```
 
 The helper accepts schema version 1, limits input to 1 MiB, validates unknown
@@ -206,6 +216,7 @@ python -m mypy --strict .agents/skills/project-mentor/scripts tools
 python -m coverage run --branch -m pytest -q
 python -m coverage report
 python tools/sync_skill.py --check
+python tools/run_official_plugin_validation.py --plugin .
 python tools/repository_scan.py --all
 ```
 
@@ -230,7 +241,9 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
   conversation evidence available to the host.
 - English and Chinese are supported behavior targets, but v0.1.0 does not claim
   comprehensive localization.
-- This is a standalone skill release, not a plugin or marketplace package.
+- The skills-only plugin is not yet listed in an official or curated marketplace.
+- The development `pyproject.toml` intentionally builds no runtime package; PyPI
+  publication remains out of scope until a real standalone package contract exists.
 
 ## Project links
 
@@ -239,6 +252,7 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - [Product contract](docs/product-contract.md)
 - [Evaluation and reproduction](docs/evaluation.md)
 - [v0.1.0 release readiness](docs/release-readiness-v0.1.0.md)
+- [v0.2.0 release notes](docs/release-notes-v0.2.0.md)
 - [Threat model](docs/threat-model.md)
 - [v0.1.0 security review](docs/security-review-v0.1.0.md)
 - [Contributing](CONTRIBUTING.md)

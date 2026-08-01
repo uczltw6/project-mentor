@@ -94,6 +94,11 @@ Prompts and fixture selection are in
 contains sanitized outcomes only; it excludes raw private paths, model
 reasoning, and the synthetic secret value.
 
+The result record pins the evaluated skill commit and a deterministic digest
+of the cases plus fixture files. The original run did not retain exact client,
+model, or evaluator versions; those fields are explicitly recorded as
+unavailable rather than reconstructed after the fact.
+
 ### Reproduction
 
 Deterministic fixture integrity and result-accounting checks run with the main

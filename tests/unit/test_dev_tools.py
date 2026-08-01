@@ -53,6 +53,8 @@ def test_sync_tool_rejects_missing_unsafe_or_same_paths(tmp_path: Path) -> None:
         validate_destination(tmp_path / "wrong")
     with pytest.raises(SyncError, match="different"):
         synchronize(source, source)
+    with pytest.raises(SyncError, match="repository root"):
+        validate_destination(source, allowed_root=tmp_path / "other-repository")
 
 
 def test_sync_tool_rejects_symlinks_when_supported(tmp_path: Path) -> None:

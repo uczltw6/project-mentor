@@ -110,5 +110,14 @@ def test_runtime_has_no_network_or_process_execution_imports() -> None:
 
 def test_required_helper_subcommands_are_documented() -> None:
     skill_text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
-    for command in ("init", "apply-event", "validate", "render", "summarize", "redact"):
+    for command in (
+        "init",
+        "apply-event",
+        "validate",
+        "render",
+        "summarize",
+        "redact",
+        "doctor",
+        "verify-anchors",
+    ):
         assert f"project_mentor.py {command}" in skill_text

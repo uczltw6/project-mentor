@@ -76,6 +76,21 @@ V1 excludes curricula, education platforms, UIs or IDE extensions, MCP servers, 
 ## Resolved constraints
 
 - Use `$HOME/.agents/skills` for current Codex user-scope installation even though the original fallback names an older `.codex` checkout.
-- Publish a standalone skill repository because public GitHub release is authorized; do not widen the task into plugin packaging or submission.
+- For V1, publish a standalone skill repository because public GitHub release was authorized;
+  V0.2 separately authorizes a skills-only plugin wrapper but not marketplace submission.
 - Treat the optional Python helper as a reliability layer, never an activation or mentoring prerequisite.
 - Treat deterministic activation fixtures as metadata checks only; reserve semantic activation claims for clean-context forward evaluation.
+
+## V0.2 extension
+
+V0.2 adds a skills-only Codex plugin distribution, read-only environment
+diagnostics, conservative verification for supported local evidence anchors,
+and machine-readable JSON receipts. These extensions do not change the
+activation boundary, opt-in persistence requirement, user-evidence standard,
+or standard-library-only runtime.
+
+Anchor verification is deliberately narrow. Unsupported, malformed, unsafe,
+non-local, or symlinked locators produce `unavailable`; they do not become
+guesses. A mismatch is reported without mutation unless the caller explicitly
+uses `--write` with the current ledger revision. PyPI and marketplace
+publication remain separate release decisions rather than implied side effects.

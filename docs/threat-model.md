@@ -34,6 +34,7 @@ arbitrary command-execution capability.
 | Malformed, oversized, deeply unexpected, or future-version data | Strict exact-field validation, enums, identifier/timestamp checks, 1 MiB cap, version rejection, bounded rendering | Resource use below the byte cap still depends on the local interpreter and machine |
 | Lost update or conflicting replay | Expected revisions, original-content recheck, stable event IDs, idempotent identical replay, conflict exit codes | No multi-writer locking; callers must reload and retry deliberately |
 | Symlink or target substitution | Existing symlink refusal, same-directory temporary file, pre-replace content recheck, atomic replacement | Filesystem semantics and privileges vary; a hostile local administrator remains out of scope |
+| Anchor traversal, stale evidence, unsafe local target, or file-swap race | Relative POSIX locator grammar, project-root confinement, component symlink refusal, no-follow file opens where supported, before/opened/after identity checks, bounded reads, conservative `unavailable` results, hashed locators, read-only default, revision-guarded writes | A hostile local administrator or process capable of defeating filesystem identity guarantees remains out of scope; text-token matching is intentionally weaker than parsing a language or configuration format |
 | Partial or corrupt write | Validate first, flush and `fsync`, atomic replacement, preserve prior file on expected failures | Hardware/filesystem failure can defeat application-level guarantees |
 | Private absolute paths or development residue enter the release | Repository scanner, clean-clone rehearsal, tracked-file review, public forward results contain sanitized notes only | Human-authored prose can still disclose context that pattern rules do not recognize |
 | Dependency or action compromise | No runtime dependencies; bounded development dependencies; Dependabot; pinned GitHub Actions where practical | Package indexes and GitHub Actions remain external supply-chain trust roots |
@@ -51,6 +52,8 @@ arbitrary command-execution capability.
 5. Unsupported schemas fail closed.
 6. Secret values are never intentionally included in public evaluation data.
 7. The runtime helper performs no network access.
+8. Anchor verification never executes a locator and never writes without an
+   explicit expected revision.
 
 ## Verification
 
