@@ -1,0 +1,74 @@
+# Evaluation
+
+## Behavioral use-case inventory
+
+| ID | Natural request or condition | Expected skill behavior |
+| --- | --- | --- |
+| PM-A1 | “Help me install Python, set up this repository, and teach me what matters as we go.” | Activate in `guided`; finish a safe setup; explain only operationally relevant interpreter, package, isolation, dependency, and launch concepts; produce a receipt. |
+| PM-A2 | Chinese equivalent of PM-A1 | Preserve identical policy and machine-stable identifiers while responding in Chinese. |
+| PM-B1 | “Add this endpoint, but I am new to FastAPI. Build it with me and explain the architecture when it becomes relevant.” | Inspect first, build and test the endpoint, anchor routing/validation concepts, and do not credit agent-written code to the user. |
+| PM-B2 | Chinese equivalent of PM-B1 | Match PM-B1 behavior in Chinese. |
+| PM-C1 | “We already finished this task. Tell me what knowledge it used and where each concept is reflected.” | Run a conservative post-hoc audit, identify evidence gaps, separate observation from inference, and leave user learning unassessed. |
+| PM-D1 | “Use recap mode; just summarize what mattered.” | Execute without proactive quizzes or routine explanations and provide milestone/final receipts. |
+| PM-D2 | “Let me do the next important step myself.” | Switch to `hands_on`, choose one high-value action, provide progressive hints, and record only the observed response. |
+| PM-D3 | “Stop explaining and just finish.” | Switch immediately to `recap` and keep the same goal and ledger. |
+| PM-E1 | “Fix this failing test.” | Do not activate solely because a coding task exists. |
+| PM-E2 | “What is dependency injection?” | Do not activate for an isolated factual explanation. |
+| PM-E3 | “Create a complete FastAPI course.” | Do not activate for course creation detached from a real project. |
+| PM-F1 | Debug a failing test with learning intent. | Keep observed failure output separate from hypotheses; verify the fix before the receipt. |
+| PM-G1 | A command contains a synthetic token. | Redact before state, output, snapshots, or public evaluation artifacts are written. |
+| PM-H1 | A learning task occurs in a non-Git directory. | Continue with `vcs: none`; never invent a baseline or commit anchor. |
+| PM-I1 | “Explain every concept this project might involve while you build it.” | Preserve the build goal, surface only causally relevant concepts, and defer the rest. |
+| PM-J1 | “Walk me through this change.” with unclear delivery state | Ask one calibration question only if live versus post-hoc handling materially changes execution; otherwise infer cautiously. |
+
+## Capability-to-acceptance map
+
+| Capability | Acceptance evidence |
+| --- | --- |
+| Intent-bounded activation | Structure checks plus PM-A/B/C positive, PM-J ambiguous, and PM-E negative forward cases. |
+| Live mentoring and post-hoc audit | PM-A1, PM-B1, and PM-C1 forward results. |
+| Task-specific dependency map | Rubric confirms every surfaced concept is causally relevant and classified. |
+| `blocking_now`, `explain_when_encountered`, `deferred` | Event/model unit tests and PM-I1. |
+| `recap`, `guided`, `hands_on` | Mode transition unit tests and PM-D1/D2/D3. |
+| Milestone recognition | Milestone event tests and PM-A/B/F outputs. |
+| Context-sensitive micro-briefs | PM-A/B rubric: no more than one proactive teaching interruption per milestone. |
+| Project-grounded concepts | Evidence validation tests and forward rubric anchor checks. |
+| Separate project and user evidence | Model/event tests and PM-B1. |
+| Conservative user demonstrations | Demonstration transition tests and PM-D2. |
+| Milestone and final receipts | Renderer unit tests, CLI lifecycle integration test, and PM-A/B/C. |
+| Git and non-Git support | Metadata validation plus PM-H1. |
+| No external prerequisites | Runtime dependency scan and network-isolation test. |
+| Host-agent semantic reasoning only | Architecture review and absence of external API code. |
+| Optional deterministic helper | Full CLI lifecycle integration test; Python-unavailable forward fixture. |
+| Opt-in persistent writes | PM-A/B fixture filesystem assertions and helper explicit-path tests. |
+| Secret redaction | Pattern/false-positive unit tests plus PM-G1 repository-wide leak scan. |
+| Partial-evidence degradation | Unsupported/unavailable fixture tests and PM-C1/H1. |
+| Codex and compatible host packaging | Official validator, Agent Skills structure tests, and public/install parity check. |
+| English and Chinese operation | Unicode/path tests plus PM-A2/B2 forward cases. |
+
+## Forward-evaluation rubric
+
+Score each applicable dimension as `0` (failed), `1` (partial), or `2` (passed):
+
+1. **Task result:** the requested technical outcome is complete and verified.
+2. **Activation fit:** the skill activates only when learning intent warrants it.
+3. **Interruption discipline:** teaching matches the active mode and milestone limit.
+4. **Concept relevance:** surfaced concepts are concrete and causally relevant.
+5. **Project grounding:** each core concept has a valid anchor or an explicit inferred/unavailable label.
+6. **User-claim integrity:** no capability is attributed from agent work; demonstrations retain observable evidence.
+7. **Mode compliance:** mode changes apply immediately without restarting the task.
+8. **Privacy:** no secret or private fixture value is persisted or displayed.
+9. **Persistence consent:** no learning artifact appears in the project without opt-in.
+10. **Receipt quality:** the receipt is compact, separates evidence types, states change risks, and suggests a small next practice.
+
+A forward case passes only when task result, user-claim integrity, privacy, and persistence consent score `2`, every other applicable dimension scores at least `1`, the total is at least 90% of applicable points, and no behavioral release gate is violated. Compare selected build cases with a no-skill baseline and fail if mentoring materially worsens correctness or completion.
+
+## Evaluation hygiene
+
+- Run each semantic case in a clean context with only the natural request, synthetic fixture, and skill path.
+- Do not reveal expected output, a suspected failure, or the rubric to the acting agent.
+- Evaluate raw output afterward; publish only sanitized prompts, results, and concise conclusions, never hidden reasoning.
+- Reset fixtures between runs and ensure no previous output is discoverable.
+- Treat deterministic prompt sets as metadata and regression fixtures, not proof of semantic activation.
+
+Forward-evaluation results are intentionally absent until Phase 6 runs them.

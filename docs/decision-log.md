@@ -11,3 +11,10 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Runtime baseline:** Python 3.11.5, Git 2.45.1, GitHub CLI 2.91.0, and Node.js 24.15.0 are available. The implementation target remains Python 3.10+ with standard-library-only runtime dependencies.
 - **Distribution boundary:** Release a standalone skill and public source repository. Do not publish a plugin, package-registry artifact, or marketplace submission in V1.
 
+## 2026-08-01 — Phase 1 product contract
+
+- **Success ordering:** Judge delivery correctness first, mentoring usefulness second, and persistence convenience third. Teaching must never weaken the real task result.
+- **Trust boundary:** Store project evidence and user demonstrations in separate fields. Agent work may establish project usage but can establish at most user exposure, never user capability.
+- **Activation boundary:** Require explicit or clearly implied build-while-learning or post-hoc learning-audit intent. Ordinary delegated implementation and isolated explanations remain outside the skill.
+- **Persistence boundary:** Keep state in conversation or temporary storage by default. Create `.project-mentor/` or any alternative learning artifact only after explicit user opt-in.
+- **Mode contract:** Expose exactly `recap`, `guided`, and `hands_on`; make `guided` the activation default and honor mode changes immediately without restarting the delivery task.
