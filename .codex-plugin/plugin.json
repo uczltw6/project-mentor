@@ -1,0 +1,36 @@
+{
+  "name": "project-mentor",
+  "version": "0.2.0",
+  "description": "Complete real projects with just-in-time, evidence-grounded mentoring.",
+  "author": {
+    "name": "Tianyi Wei",
+    "url": "https://github.com/uczltw6"
+  },
+  "homepage": "https://github.com/uczltw6/project-mentor#readme",
+  "repository": "https://github.com/uczltw6/project-mentor",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "learning",
+    "mentoring",
+    "skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Project Mentor",
+    "shortDescription": "Learn through evidence in real projects",
+    "longDescription": "Completes real coding work while teaching only the concepts that matter at the moment they appear, then produces an evidence-grounded learning receipt.",
+    "developerName": "Tianyi Wei",
+    "category": "Productivity",
+    "capabilities": [
+      "Local project mentoring",
+      "Evidence verification",
+      "Learning receipts"
+    ],
+    "websiteURL": "https://github.com/uczltw6/project-mentor",
+    "defaultPrompt": [
+      "Use Project Mentor to complete this project and teach me as we go.",
+      "Review this finished task and show what I learned from the evidence."
+    ]
+  }
+}

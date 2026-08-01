@@ -1,0 +1,4 @@
+interface:
+  display_name: "Project Mentor"
+  short_description: "Learn through evidence in real projects"
+  default_prompt: "Use $project-mentor to complete this real project while teaching the concepts that matter as we encounter them."

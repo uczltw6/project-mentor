@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -82,3 +83,15 @@ def test_release_results_cover_every_case_and_pass_the_gate() -> None:
     assert results["summary"]["applicable_points"] == len(applicable) * 2
     assert results["summary"]["earned_points"] == sum(applicable)
     assert all(score >= 1 for score in applicable)
+    provenance = results["provenance"]
+    assert provenance["skill_commit"] == "649602297fc592e70e5353bd5d67a7c16909d5cd"
+    assert len(provenance["fixture_set_sha256"]) == 64
+    digest = hashlib.sha256()
+    inputs = [
+        root / "cases.json",
+        *(path for path in (root / "fixtures").rglob("*") if path.is_file()),
+    ]
+    for path in sorted(inputs, key=lambda item: item.relative_to(root).as_posix()):
+        digest.update(path.relative_to(root).as_posix().encode("utf-8") + b"\0")
+        digest.update(path.read_bytes() + b"\0")
+    assert provenance["fixture_set_sha256"] == digest.hexdigest()

@@ -2,6 +2,13 @@
   "schema_version": 1,
   "release": "v0.1.0",
   "run_date": "2026-08-01",
+  "provenance": {
+    "client": "Codex; exact client version unavailable in the retained run record",
+    "model": "unavailable in the retained run record",
+    "evaluator": "independent rubric evaluation; exact evaluator version unavailable",
+    "skill_commit": "649602297fc592e70e5353bd5d67a7c16909d5cd",
+    "fixture_set_sha256": "f64343522e5869841708b7743122a4ff3e3251dc45c497391352418c47de8dc9"
+  },
   "isolation": "Each case ran in a fresh fixture copy with no access to sibling results.",
   "scoring": {
     "scale": {

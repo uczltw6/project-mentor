@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Synchronize or compare the installed and public Project Mentor skill copies."""
+"""Synchronize or compare personal, public, and plugin Project Mentor skill copies."""
 
 from __future__ import annotations
 
@@ -37,11 +37,29 @@ def release_files(root: Path) -> dict[Path, str]:
     return files
 
 
-def validate_destination(destination: Path) -> Path:
+def validate_destination(destination: Path, *, allowed_root: Path | None = None) -> Path:
     """Confine writes to a directory with the expected skill boundary."""
     if destination.is_symlink():
         raise SyncError(f"destination must not be a symlink: {destination}")
-    resolved = destination.resolve()
+    absolute = destination.absolute()
+    if allowed_root is not None:
+        root = allowed_root.resolve()
+        try:
+            relative = absolute.relative_to(root)
+        except ValueError as error:
+            raise SyncError("destination must stay within the repository root") from error
+        cursor = root
+        for part in relative.parts:
+            cursor /= part
+            if cursor.is_symlink():
+                raise SyncError("destination path must not contain symlinks")
+        resolved = absolute.resolve()
+        try:
+            resolved.relative_to(root)
+        except ValueError as error:
+            raise SyncError("destination must stay within the repository root") from error
+    else:
+        resolved = absolute.resolve()
     if resolved.name != "project-mentor" or resolved.parent.name != "skills":
         raise SyncError("destination must end in skills/project-mentor")
     return resolved
@@ -61,9 +79,9 @@ def differences(source: Path, destination: Path) -> list[str]:
     return messages
 
 
-def synchronize(source: Path, destination: Path) -> int:
+def synchronize(source: Path, destination: Path, *, allowed_root: Path | None = None) -> int:
     source = source.resolve()
-    destination = validate_destination(destination)
+    destination = validate_destination(destination, allowed_root=allowed_root)
     if source == destination:
         raise SyncError("source and destination must be different directories")
 
@@ -102,6 +120,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=repository / ".agents" / "skills" / "project-mentor",
         help="Public repository skill directory",
     )
+    parser.add_argument(
+        "--plugin-destination",
+        type=Path,
+        default=repository / "skills" / "project-mentor",
+        help="Skills-only plugin copy",
+    )
     action = parser.add_mutually_exclusive_group()
     action.add_argument(
         "--check", action="store_true", help="Check parity without writing (default)"
@@ -112,11 +136,22 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    repository = Path(__file__).resolve().parents[1]
     try:
+        destination = validate_destination(args.destination, allowed_root=repository)
+        plugin_destination = validate_destination(args.plugin_destination, allowed_root=repository)
         if args.write:
-            count = synchronize(args.source, args.destination)
-            print(f"Synchronized {count} release files.")
-        mismatches = differences(args.source.resolve(), args.destination.resolve())
+            if args.source.resolve() != destination:
+                count = synchronize(args.source, destination, allowed_root=repository)
+                print(f"Synchronized {count} public release files.")
+            plugin_count = synchronize(destination, plugin_destination, allowed_root=repository)
+            print(f"Synchronized {plugin_count} plugin release files.")
+        mismatches = [
+            f"personal/public: {item}" for item in differences(args.source.resolve(), destination)
+        ]
+        mismatches.extend(
+            f"public/plugin: {item}" for item in differences(destination, plugin_destination)
+        )
     except (OSError, SyncError) as error:
         print(f"error: {error}", file=sys.stderr)
         return 2
@@ -124,7 +159,7 @@ def main(argv: list[str] | None = None) -> int:
         for mismatch in mismatches:
             print(mismatch, file=sys.stderr)
         return 1
-    print("Skill release files are byte-for-byte identical.")
+    print("Personal, public, and plugin skill files are byte-for-byte identical.")
     return 0
 
 

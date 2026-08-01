@@ -33,6 +33,7 @@ def test_ci_covers_supported_python_cross_platform_and_release_gates() -> None:
         "sync_skill.py --check",
         "run_official_skill_validation.py",
         "tests/structure",
+        "CI Gate",
     ):
         assert requirement in ci
 
@@ -45,3 +46,5 @@ def test_codeql_and_dependabot_are_narrowly_configured() -> None:
     assert "security-extended" in codeql
     assert "package-ecosystem: pip" in dependabot
     assert "package-ecosystem: github-actions" in dependabot
+    assert "development-minor-and-patch" in dependabot
+    assert "update-types:" in dependabot
