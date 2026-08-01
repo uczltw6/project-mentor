@@ -1,0 +1,24 @@
+{
+  "positive": [
+    "Help me install Python, set up this repository, and teach me what matters as we go.",
+    "Add this endpoint, but I am new to FastAPI. Build it with me and explain the architecture when it becomes relevant.",
+    "We already finished this task. Tell me what knowledge it used and where each concept is reflected in the project.",
+    "帮我搭好这个 Python 项目，边做边讲真正需要懂的东西。"
+  ],
+  "indirect": [
+    "I need this migration finished, but I also want to understand each important decision well enough to maintain it.",
+    "Can the project itself be my syllabus while we ship this feature?",
+    "完成这个接口时，请把真正影响维护的知识点和代码位置对应起来。"
+  ],
+  "negative": [
+    "Fix this failing test.",
+    "What is dependency injection?",
+    "Create a complete beginner FastAPI course.",
+    "Refactor this function and open a pull request."
+  ],
+  "ambiguous": [
+    "Walk me through this change.",
+    "Help me understand this repository.",
+    "Show me what is important here."
+  ]
+}

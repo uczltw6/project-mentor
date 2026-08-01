@@ -7,10 +7,11 @@ import json
 import os
 import sys
 import tempfile
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
-from .errors import IOSafetyError, InvalidInputError, RevisionConflictError
+from .errors import InvalidInputError, IOSafetyError, RevisionConflictError
 from .model import MAX_INPUT_BYTES, canonical_json
 from .redact import redact_data
 
@@ -64,9 +65,7 @@ def sha256_file(path: Path) -> str:
         raise IOSafetyError(f"cannot read output path for revision check: {path}") from error
 
 
-def atomic_write_text(
-    path: str | Path, text: str, *, expected_sha256: str | None = None
-) -> None:
+def atomic_write_text(path: str | Path, text: str, *, expected_sha256: str | None = None) -> None:
     """Atomically replace an explicit path while refusing an existing symlink."""
     target = Path(path)
     if target.is_symlink():
@@ -78,9 +77,10 @@ def atomic_write_text(
     except OSError as error:
         raise IOSafetyError(f"cannot create output directory: {target.parent}") from error
 
-    if expected_sha256 is not None:
-        if not target.exists() or sha256_file(target) != expected_sha256:
-            raise RevisionConflictError("ledger changed after it was read; reload and retry")
+    if expected_sha256 is not None and (
+        not target.exists() or sha256_file(target) != expected_sha256
+    ):
+        raise RevisionConflictError("ledger changed after it was read; reload and retry")
 
     descriptor = -1
     temporary: Path | None = None
@@ -95,7 +95,9 @@ def atomic_write_text(
             handle.flush()
             os.fsync(handle.fileno())
         if expected_sha256 is not None and sha256_file(target) != expected_sha256:
-            raise RevisionConflictError("ledger changed before atomic replacement; reload and retry")
+            raise RevisionConflictError(
+                "ledger changed before atomic replacement; reload and retry"
+            )
         if target.is_symlink():
             raise IOSafetyError(f"refusing to replace path that became a symlink: {target}")
         os.replace(temporary, target)
@@ -108,15 +110,11 @@ def atomic_write_text(
         if descriptor >= 0:
             os.close(descriptor)
         if temporary is not None:
-            try:
+            with suppress(OSError):
                 temporary.unlink(missing_ok=True)
-            except OSError:
-                pass
 
 
-def atomic_write_json(
-    path: str | Path, value: Any, *, expected_sha256: str | None = None
-) -> None:
+def atomic_write_json(path: str | Path, value: Any, *, expected_sha256: str | None = None) -> None:
     atomic_write_text(path, canonical_json(redact_data(value)), expected_sha256=expected_sha256)
 
 

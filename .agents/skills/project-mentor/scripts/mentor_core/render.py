@@ -77,7 +77,8 @@ def _user_demonstration(concept: dict[str, Any], language: str) -> str:
     if not demonstrations:
         if language == "zh":
             return f"接触状态：{_plain(concept['user_learning']['exposure'])}；理解尚未验证"
-        return f"Exposure: {_plain(concept['user_learning']['exposure'])}; understanding not yet verified"
+        exposure = _plain(concept["user_learning"]["exposure"])
+        return f"Exposure: {exposure}; understanding not yet verified"
     strongest = max(
         demonstrations,
         key=lambda item: (CAPABILITY_ORDER[item["capability"]], item["timestamp"], item["id"]),
@@ -96,14 +97,17 @@ def _user_demonstration(concept: dict[str, Any], language: str) -> str:
 def _evidence_lines(concept: dict[str, Any], language: str) -> list[str]:
     evidence = concept["project_evidence"]
     if not evidence:
-        label = "项目证据：不可用；未提出更强结论" if language == "zh" else "Project evidence: unavailable; no stronger claim made"
+        label = (
+            "项目证据：不可用；未提出更强结论"
+            if language == "zh"
+            else "Project evidence: unavailable; no stronger claim made"
+        )
         return [f"- {label}"]
     title = "项目证据" if language == "zh" else "Project evidence"
     lines = [f"- {title}:"]
     for item in sorted(evidence, key=lambda entry: entry["id"]):
         lines.append(
-            f"  - `{_code(item['locator'])}` — {_plain(item['summary'])} "
-            f"({_plain(item['class'])})"
+            f"  - `{_code(item['locator'])}` — {_plain(item['summary'])} ({_plain(item['class'])})"
         )
     return lines
 
@@ -173,7 +177,9 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
             )
             lines.extend(_evidence_lines(concept, language))
             decision_text = (
-                "; ".join(_plain(item["summary"]) for item in decisions) if decisions else "未记录单独决策"
+                "; ".join(_plain(item["summary"]) for item in decisions)
+                if decisions
+                else "未记录单独决策"
             )
             lines.extend(
                 [
@@ -203,7 +209,8 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
             lines.extend(
                 [
                     f"- Decision made: {decision_text}",
-                    "- Agent demonstrated: project use supported by the evidence above; this does not imply user capability",
+                    "- Agent demonstrated: project use supported by the evidence above; "
+                    "this does not imply user capability",
                     f"- You demonstrated: {_user_demonstration(concept, language)}",
                     f"- If this changes: {risk or 'No specific risk recorded'}",
                     f"- Small next practice: {_plain(concept['next_practice'])}",
@@ -214,7 +221,10 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
     if language == "zh":
         lines.extend(["## 关键设计决策", ""])
         lines.extend(
-            [f"- {_plain(item['summary'])} — {_plain(item['rationale'])}" for item in ledger["decisions"]]
+            [
+                f"- {_plain(item['summary'])} — {_plain(item['rationale'])}"
+                for item in ledger["decisions"]
+            ]
             or ["- 未记录单独的设计决策"]
         )
         lines.extend(["", "## 尚未展示的理解", ""])
@@ -224,7 +234,10 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
     else:
         lines.extend(["## Key design decisions", ""])
         lines.extend(
-            [f"- {_plain(item['summary'])} — {_plain(item['rationale'])}" for item in ledger["decisions"]]
+            [
+                f"- {_plain(item['summary'])} — {_plain(item['rationale'])}"
+                for item in ledger["decisions"]
+            ]
             or ["- No separate design decision recorded"]
         )
         lines.extend(["", "## Understanding not yet demonstrated", ""])
@@ -233,7 +246,9 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
         lines.extend(["", "## Deferred / learn later", ""])
 
     deferred_reason = {item["concept_id"]: item["reason"] for item in ledger["deferred"]}
-    deferred = [item for item in ledger["concepts"] if item["id"] in receipt["deferred_concept_ids"]]
+    deferred = [
+        item for item in ledger["concepts"] if item["id"] in receipt["deferred_concept_ids"]
+    ]
     if deferred:
         for concept in sorted(deferred, key=lambda item: item["id"]):
             reason = deferred_reason.get(concept["id"], concept["why_now"])

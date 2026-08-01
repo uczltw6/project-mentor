@@ -3,17 +3,18 @@
 from __future__ import annotations
 
 import re
+from collections.abc import Iterable
 from datetime import datetime
-from typing import Any, Iterable
+from typing import Any
 
 from .errors import DuplicateIdError, InvalidInputError, UnsupportedVersionError
 from .model import (
     ACTORS,
     CLASSIFICATIONS,
     DEMONSTRATION_CAPABILITIES,
+    EVENT_TYPES,
     EVIDENCE_CLASSES,
     EVIDENCE_KINDS,
-    EVENT_TYPES,
     EXPOSURES,
     MAX_STRING_LENGTH,
     MODES,
@@ -61,7 +62,7 @@ def _integer(value: Any, path: str, *, minimum: int = 0) -> int:
         raise InvalidInputError(f"{path} must be an integer")
     if value < minimum:
         raise InvalidInputError(f"{path} must be at least {minimum}")
-    return value
+    return int(value)
 
 
 def _enum(value: Any, path: str, allowed: frozenset[str]) -> str:
@@ -75,7 +76,8 @@ def _id(value: Any, path: str) -> str:
     result = _string(value, path)
     if not ID_PATTERN.fullmatch(result):
         raise InvalidInputError(
-            f"{path} must start with a letter and contain only letters, digits, dot, underscore, or hyphen"
+            f"{path} must start with a letter and contain only letters, digits, dot, "
+            "underscore, or hyphen"
         )
     return result
 
@@ -108,7 +110,9 @@ def _string_list(value: Any, path: str, *, identifiers: bool = False) -> list[st
     items = _list(value, path)
     result: list[str] = []
     for index, item in enumerate(items):
-        checked = _id(item, f"{path}[{index}]") if identifiers else _string(item, f"{path}[{index}]")
+        checked = (
+            _id(item, f"{path}[{index}]") if identifiers else _string(item, f"{path}[{index}]")
+        )
         result.append(checked)
     if len(result) != len(set(result)):
         raise DuplicateIdError(f"{path} contains duplicate values")
@@ -151,7 +155,9 @@ def validate_evidence(value: Any, path: str = "evidence", *, project: bool = Tru
         _string(evidence["verifier"], f"{path}.verifier")
         _string(evidence["result"], f"{path}.result")
     elif "verifier" in evidence or "result" in evidence:
-        raise InvalidInputError(f"{path} verifier/result are allowed only for rule_verified evidence")
+        raise InvalidInputError(
+            f"{path} verifier/result are allowed only for rule_verified evidence"
+        )
     if evidence_class == "stale":
         stale_from = _enum(evidence.get("stale_from"), f"{path}.stale_from", EVIDENCE_CLASSES)
         if stale_from == "stale":
@@ -202,7 +208,10 @@ def validate_concept(value: Any, path: str = "concept") -> None:
     _enum(concept["classification"], f"{path}.classification", CLASSIFICATIONS)
     _string(concept["why_now"], f"{path}.why_now")
     _string_list(concept["prerequisites"], f"{path}.prerequisites", identifiers=True)
-    evidence_items = [_object(item, f"{path}.project_evidence[{index}]") for index, item in enumerate(_list(concept["project_evidence"], f"{path}.project_evidence"))]
+    evidence_items = [
+        _object(item, f"{path}.project_evidence[{index}]")
+        for index, item in enumerate(_list(concept["project_evidence"], f"{path}.project_evidence"))
+    ]
     for index, evidence in enumerate(evidence_items):
         validate_evidence(evidence, f"{path}.project_evidence[{index}]")
     _unique_ids(evidence_items, f"{path}.project_evidence")
@@ -211,13 +220,17 @@ def validate_concept(value: Any, path: str = "concept") -> None:
     exposure = _enum(learning["exposure"], f"{path}.user_learning.exposure", EXPOSURES)
     demonstrations = [
         _object(item, f"{path}.user_learning.demonstrations[{index}]")
-        for index, item in enumerate(_list(learning["demonstrations"], f"{path}.user_learning.demonstrations"))
+        for index, item in enumerate(
+            _list(learning["demonstrations"], f"{path}.user_learning.demonstrations")
+        )
     ]
     for index, demonstration in enumerate(demonstrations):
         validate_demonstration(demonstration, f"{path}.user_learning.demonstrations[{index}]")
     _unique_ids(demonstrations, f"{path}.user_learning.demonstrations")
     if demonstrations and exposure == "not_seen":
-        raise InvalidInputError(f"{path}.user_learning.exposure cannot be not_seen with demonstrations")
+        raise InvalidInputError(
+            f"{path}.user_learning.exposure cannot be not_seen with demonstrations"
+        )
     _string_list(concept["risks_if_changed"], f"{path}.risks_if_changed")
     _string(concept["next_practice"], f"{path}.next_practice")
 
@@ -227,7 +240,15 @@ def validate_decision(value: Any, path: str = "decision") -> None:
     _exact_fields(
         decision,
         path,
-        {"id", "timestamp", "summary", "alternatives", "rationale", "concept_ids", "project_evidence"},
+        {
+            "id",
+            "timestamp",
+            "summary",
+            "alternatives",
+            "rationale",
+            "concept_ids",
+            "project_evidence",
+        },
     )
     _id(decision["id"], f"{path}.id")
     _timestamp(decision["timestamp"], f"{path}.timestamp")
@@ -235,7 +256,12 @@ def validate_decision(value: Any, path: str = "decision") -> None:
     _string_list(decision["alternatives"], f"{path}.alternatives")
     _string(decision["rationale"], f"{path}.rationale")
     _string_list(decision["concept_ids"], f"{path}.concept_ids", identifiers=True)
-    evidence = [_object(item, f"{path}.project_evidence[{index}]") for index, item in enumerate(_list(decision["project_evidence"], f"{path}.project_evidence"))]
+    evidence = [
+        _object(item, f"{path}.project_evidence[{index}]")
+        for index, item in enumerate(
+            _list(decision["project_evidence"], f"{path}.project_evidence")
+        )
+    ]
     for index, item in enumerate(evidence):
         validate_evidence(item, f"{path}.project_evidence[{index}]")
     _unique_ids(evidence, f"{path}.project_evidence")
@@ -253,7 +279,12 @@ def validate_milestone(value: Any, path: str = "milestone") -> None:
     _string(milestone["title"], f"{path}.title")
     _string(milestone["result"], f"{path}.result")
     _string_list(milestone["concept_ids"], f"{path}.concept_ids", identifiers=True)
-    evidence = [_object(item, f"{path}.project_evidence[{index}]") for index, item in enumerate(_list(milestone["project_evidence"], f"{path}.project_evidence"))]
+    evidence = [
+        _object(item, f"{path}.project_evidence[{index}]")
+        for index, item in enumerate(
+            _list(milestone["project_evidence"], f"{path}.project_evidence")
+        )
+    ]
     for index, item in enumerate(evidence):
         validate_evidence(item, f"{path}.project_evidence[{index}]")
     _unique_ids(evidence, f"{path}.project_evidence")
@@ -312,7 +343,8 @@ def validate_event(value: Any, path: str = "event") -> None:
         validate_concept(payload["concept"], f"{path}.payload.concept")
         if payload["concept"]["user_learning"]["demonstrations"]:
             raise InvalidInputError(
-                f"{path}.payload.concept must start without user demonstrations; use user_evidence_added"
+                f"{path}.payload.concept must start without user demonstrations; "
+                "use user_evidence_added"
             )
     elif event_type == "project_evidence_added":
         _exact_fields(payload, f"{path}.payload", {"concept_id", "evidence"})
@@ -361,7 +393,8 @@ def _validate_references(ledger: dict[str, Any]) -> None:
             for concept_id in item["concept_ids"]:
                 if concept_id not in concepts:
                     raise InvalidInputError(
-                        f"{collection_name[:-1]} {item['id']} references missing concept {concept_id}"
+                        f"{collection_name[:-1]} {item['id']} references missing concept "
+                        f"{concept_id}"
                     )
     for record in ledger["deferred"]:
         if record["concept_id"] not in concepts:
@@ -373,9 +406,9 @@ def _validate_references(ledger: dict[str, Any]) -> None:
 def _validate_global_evidence_ids(ledger: dict[str, Any]) -> None:
     seen_project: set[str] = set()
     seen_user: set[str] = set()
-    evidence_groups = [
-        concept["project_evidence"] for concept in ledger["concepts"]
-    ] + [item["project_evidence"] for item in ledger["decisions"] + ledger["milestones"]]
+    evidence_groups = [concept["project_evidence"] for concept in ledger["concepts"]] + [
+        item["project_evidence"] for item in ledger["decisions"] + ledger["milestones"]
+    ]
     for evidence in (item for group in evidence_groups for item in group):
         if evidence["id"] in seen_project:
             raise DuplicateIdError(f"duplicate project evidence identifier: {evidence['id']}")
@@ -387,7 +420,9 @@ def _validate_global_evidence_ids(ledger: dict[str, Any]) -> None:
             seen_user.add(demonstration["id"])
     overlap = seen_project & seen_user
     if overlap:
-        raise DuplicateIdError(f"project and user evidence identifiers overlap: {sorted(overlap)[0]}")
+        raise DuplicateIdError(
+            f"project and user evidence identifiers overlap: {sorted(overlap)[0]}"
+        )
 
 
 def validate_ledger(value: Any, path: str = "ledger") -> None:
@@ -427,29 +462,44 @@ def validate_ledger(value: Any, path: str = "ledger") -> None:
     if project["baseline"] is not None:
         _string(project["baseline"], f"{path}.project.baseline")
 
-    concepts = [_object(item, f"{path}.concepts[{index}]") for index, item in enumerate(_list(ledger["concepts"], f"{path}.concepts"))]
+    concepts = [
+        _object(item, f"{path}.concepts[{index}]")
+        for index, item in enumerate(_list(ledger["concepts"], f"{path}.concepts"))
+    ]
     for index, concept in enumerate(concepts):
         validate_concept(concept, f"{path}.concepts[{index}]")
     _unique_ids(concepts, f"{path}.concepts")
 
-    decisions = [_object(item, f"{path}.decisions[{index}]") for index, item in enumerate(_list(ledger["decisions"], f"{path}.decisions"))]
+    decisions = [
+        _object(item, f"{path}.decisions[{index}]")
+        for index, item in enumerate(_list(ledger["decisions"], f"{path}.decisions"))
+    ]
     for index, decision in enumerate(decisions):
         validate_decision(decision, f"{path}.decisions[{index}]")
     _unique_ids(decisions, f"{path}.decisions")
 
-    milestones = [_object(item, f"{path}.milestones[{index}]") for index, item in enumerate(_list(ledger["milestones"], f"{path}.milestones"))]
+    milestones = [
+        _object(item, f"{path}.milestones[{index}]")
+        for index, item in enumerate(_list(ledger["milestones"], f"{path}.milestones"))
+    ]
     for index, milestone in enumerate(milestones):
         validate_milestone(milestone, f"{path}.milestones[{index}]")
     _unique_ids(milestones, f"{path}.milestones")
 
-    events = [_object(item, f"{path}.events[{index}]") for index, item in enumerate(_list(ledger["events"], f"{path}.events"))]
+    events = [
+        _object(item, f"{path}.events[{index}]")
+        for index, item in enumerate(_list(ledger["events"], f"{path}.events"))
+    ]
     for index, event in enumerate(events):
         validate_event(event, f"{path}.events[{index}]")
     _unique_ids(events, f"{path}.events")
     if revision != len(events):
         raise InvalidInputError(f"{path}.revision must equal the number of applied events")
 
-    gaps = [_object(item, f"{path}.evidence_gaps[{index}]") for index, item in enumerate(_list(ledger["evidence_gaps"], f"{path}.evidence_gaps"))]
+    gaps = [
+        _object(item, f"{path}.evidence_gaps[{index}]")
+        for index, item in enumerate(_list(ledger["evidence_gaps"], f"{path}.evidence_gaps"))
+    ]
     for index, gap in enumerate(gaps):
         gap_path = f"{path}.evidence_gaps[{index}]"
         _exact_fields(gap, gap_path, {"id", "class", "summary", "needed_for"})
@@ -460,7 +510,10 @@ def validate_ledger(value: Any, path: str = "ledger") -> None:
         _string(gap["needed_for"], f"{gap_path}.needed_for")
     _unique_ids(gaps, f"{path}.evidence_gaps")
 
-    deferred = [_object(item, f"{path}.deferred[{index}]") for index, item in enumerate(_list(ledger["deferred"], f"{path}.deferred"))]
+    deferred = [
+        _object(item, f"{path}.deferred[{index}]")
+        for index, item in enumerate(_list(ledger["deferred"], f"{path}.deferred"))
+    ]
     for index, item in enumerate(deferred):
         item_path = f"{path}.deferred[{index}]"
         _exact_fields(item, item_path, {"concept_id", "reason", "timestamp"})

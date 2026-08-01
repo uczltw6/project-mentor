@@ -48,8 +48,13 @@ def _apply_transition(ledger: dict[str, Any], event: dict[str, Any]) -> None:
     event_type = event["type"]
     payload = event["payload"]
     if event_type == "session_started":
-        if payload["goal"] != ledger["session"]["goal"] or payload["mode"] != ledger["session"]["mode"]:
-            raise EventConflictError("session_started payload does not match the initialized session")
+        if (
+            payload["goal"] != ledger["session"]["goal"]
+            or payload["mode"] != ledger["session"]["mode"]
+        ):
+            raise EventConflictError(
+                "session_started payload does not match the initialized session"
+            )
     elif event_type == "mode_changed":
         ledger["session"]["mode"] = payload["mode"]
     elif event_type == "concept_identified":
@@ -112,7 +117,9 @@ def _apply_transition(ledger: dict[str, Any], event: dict[str, Any]) -> None:
         for key, valid_ids in known.items():
             missing = set(receipt[key]) - valid_ids
             if missing:
-                raise InvalidInputError(f"receipt {key} references missing identifier: {sorted(missing)[0]}")
+                raise InvalidInputError(
+                    f"receipt {key} references missing identifier: {sorted(missing)[0]}"
+                )
 
 
 def apply_event(
@@ -127,13 +134,11 @@ def apply_event(
 
     redacted_event = redact_data(copy.deepcopy(event))
     validate_event(redacted_event)
-    if datetime.fromisoformat(redacted_event["timestamp"].replace("Z", "+00:00")) < datetime.fromisoformat(
-        ledger["session"]["created_at"].replace("Z", "+00:00")
-    ):
+    if datetime.fromisoformat(
+        redacted_event["timestamp"].replace("Z", "+00:00")
+    ) < datetime.fromisoformat(ledger["session"]["created_at"].replace("Z", "+00:00")):
         raise InvalidInputError("event timestamp must not precede the session creation time")
-    existing = next(
-        (item for item in ledger["events"] if item["id"] == redacted_event["id"]), None
-    )
+    existing = next((item for item in ledger["events"] if item["id"] == redacted_event["id"]), None)
     if existing is not None:
         if canonical_json(existing) == canonical_json(redacted_event):
             return copy.deepcopy(ledger), False

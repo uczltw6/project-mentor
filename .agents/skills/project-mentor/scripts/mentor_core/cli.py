@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import argparse
 import sys
+from collections.abc import Callable
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any
 
 from .errors import InvalidInputError, MentorError
 from .events import apply_event
@@ -15,8 +16,8 @@ from .redact import redact_data, redact_text
 from .render import build_receipt_contract, render_receipt, summarize
 from .validate import (
     validate_demonstration,
-    validate_evidence,
     validate_event,
+    validate_evidence,
     validate_ledger,
     validate_receipt,
 )
@@ -61,12 +62,16 @@ def build_parser() -> argparse.ArgumentParser:
     render_parser.add_argument("--ledger", required=True, help="Ledger JSON file or '-' for stdin")
     render_parser.add_argument("--output", default="-")
     render_parser.add_argument("--language", choices=("en", "zh"), default="en")
-    render_parser.add_argument("--rendered-at", help="Inject a UTC timestamp for reproducible output")
+    render_parser.add_argument(
+        "--rendered-at", help="Inject a UTC timestamp for reproducible output"
+    )
     render_parser.add_argument("--output-locator")
     render_parser.add_argument("--max-concepts", type=int, default=5)
 
     summarize_parser = subparsers.add_parser("summarize", help="Emit a compact JSON summary")
-    summarize_parser.add_argument("--ledger", required=True, help="Ledger JSON file or '-' for stdin")
+    summarize_parser.add_argument(
+        "--ledger", required=True, help="Ledger JSON file or '-' for stdin"
+    )
     summarize_parser.add_argument("--output", default="-")
 
     redact_parser = subparsers.add_parser("redact", help="Redact likely secrets from UTF-8 text")

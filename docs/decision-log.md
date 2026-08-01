@@ -45,3 +45,12 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Python-unavailable fallback:** Continue mentoring with conversation or ephemeral state and avoid repeated helper retries during the same known-unavailable phase.
 - **Official metadata generation:** Regenerate `agents/openai.yaml` with the official generator after reading the completed skill. Enable Python UTF-8 mode to avoid the generator's Windows locale-dependent read failure.
 - **Validation:** The official validator passes against both the canonical personal skill and public copy; all 15 release files are byte-for-byte identical, with no placeholders, auxiliary documents, or generated caches.
+
+## 2026-08-01 — Phase 5 deterministic verification
+
+- **Test layers:** Cover schema/model validation, all event transitions, redaction true/false positives, atomic I/O, deterministic English/Chinese rendering, CLI lifecycle, developer sync tools, skill structure, and activation metadata fixtures.
+- **Secret-safe failures:** Route synthetic-secret assertions through a helper that reports only that a leak occurred, never the tested value, so a regression does not expose fixture credentials in test logs.
+- **Activation evidence boundary:** Store positive, indirect, negative, and ambiguous prompt sets as deterministic metadata fixtures. Do not treat those fixtures as proof of semantic model activation.
+- **Local results:** Collect 100 tests; pass 98 and skip two symlink cases because the current Windows account cannot create test symlinks. Defer those platform branches to Linux CI rather than weakening the tests.
+- **Coverage:** Measure the deterministic runtime helper with branch coverage and reach 95%, above the 90% release threshold without adding meaningless assertions.
+- **Static quality:** Ruff lint and format checks pass; strict mypy passes across the runtime helper and repository development tools.
