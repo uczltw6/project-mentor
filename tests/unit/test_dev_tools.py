@@ -68,6 +68,18 @@ def test_sync_tool_rejects_symlinks_when_supported(tmp_path: Path) -> None:
         release_files(source)
 
 
+def test_sync_tool_rejects_symlink_skill_root_when_supported(tmp_path: Path) -> None:
+    real = _skill(tmp_path / "real")
+    linked = tmp_path / "linked" / ".agents" / "skills" / "project-mentor"
+    linked.parent.mkdir(parents=True)
+    try:
+        linked.symlink_to(real, target_is_directory=True)
+    except OSError:
+        pytest.skip("symlink creation is unavailable")
+    with pytest.raises(SyncError, match="must not be a symlink"):
+        release_files(linked)
+
+
 def test_validator_candidates_preserve_explicit_precedence(tmp_path: Path) -> None:
     explicit = tmp_path / "quick_validate.py"
     candidates = validator_candidates(explicit)

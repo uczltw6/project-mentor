@@ -33,7 +33,8 @@ def read_text(source: str | Path, *, limit: int = MAX_INPUT_BYTES) -> str:
         try:
             if path.stat().st_size > limit:
                 raise InvalidInputError(f"input exceeds the {limit}-byte limit")
-            raw = path.read_bytes()
+            with path.open("rb") as handle:
+                raw = handle.read(limit + 1)
         except InvalidInputError:
             raise
         except OSError as error:
@@ -46,8 +47,17 @@ def read_text(source: str | Path, *, limit: int = MAX_INPUT_BYTES) -> str:
 
 def parse_json(text: str, *, label: str = "input") -> Any:
     """Parse JSON while reporting location but never echoing its content."""
+
+    def unique_object(pairs: list[tuple[str, Any]]) -> dict[str, Any]:
+        result: dict[str, Any] = {}
+        for key, value in pairs:
+            if key in result:
+                raise InvalidInputError(f"{label} contains a duplicate JSON object key")
+            result[key] = value
+        return result
+
     try:
-        return json.loads(text)
+        return json.loads(text, object_pairs_hook=unique_object)
     except json.JSONDecodeError as error:
         raise InvalidInputError(
             f"{label} is malformed JSON at line {error.lineno}, column {error.colno}"
@@ -58,9 +68,23 @@ def read_json(source: str | Path, *, limit: int = MAX_INPUT_BYTES) -> Any:
     return parse_json(read_text(source, limit=limit), label=str(source))
 
 
-def sha256_file(path: Path) -> str:
+def sha256_file(path: Path, *, limit: int = MAX_INPUT_BYTES) -> str:
     try:
-        return hashlib.sha256(path.read_bytes()).hexdigest()
+        if path.is_symlink():
+            raise IOSafetyError("refusing to read a symlink output path")
+        if path.stat().st_size > limit:
+            raise InvalidInputError(f"input exceeds the {limit}-byte limit")
+        digest = hashlib.sha256()
+        total = 0
+        with path.open("rb") as handle:
+            while chunk := handle.read(65_536):
+                total += len(chunk)
+                if total > limit:
+                    raise InvalidInputError(f"input exceeds the {limit}-byte limit")
+                digest.update(chunk)
+        return digest.hexdigest()
+    except (IOSafetyError, InvalidInputError):
+        raise
     except OSError as error:
         raise IOSafetyError(f"cannot read output path for revision check: {path}") from error
 

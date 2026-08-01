@@ -87,6 +87,19 @@ def test_runtime_imports_only_standard_library_or_local_modules() -> None:
             assert roots <= standard | local
 
 
+def test_runtime_has_no_network_or_process_execution_imports() -> None:
+    forbidden = {"asyncio", "ftplib", "http", "socket", "smtplib", "subprocess", "urllib"}
+    for path in (SKILL / "scripts").rglob("*.py"):
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        imported: set[str] = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Import):
+                imported.update(alias.name.split(".")[0] for alias in node.names)
+            elif isinstance(node, ast.ImportFrom) and node.module and node.level == 0:
+                imported.add(node.module.split(".")[0])
+        assert not imported & forbidden
+
+
 def test_required_helper_subcommands_are_documented() -> None:
     skill_text = (SKILL / "SKILL.md").read_text(encoding="utf-8")
     for command in ("init", "apply-event", "validate", "render", "summarize", "redact"):

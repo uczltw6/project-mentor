@@ -45,6 +45,8 @@ def test_rejects_oversized_file_and_stdin(tmp_path: Path, monkeypatch: pytest.Mo
     path.write_bytes(b"x" * (MAX_INPUT_BYTES + 1))
     with pytest.raises(InvalidInputError, match="byte limit"):
         read_text(path)
+    with pytest.raises(InvalidInputError, match="byte limit"):
+        sha256_file(path)
     monkeypatch.setattr("sys.stdin", StdinBytes(b"x" * 12))
     with pytest.raises(InvalidInputError, match="byte limit"):
         read_text("-", limit=10)
@@ -63,6 +65,20 @@ def test_rejects_invalid_utf8_and_malformed_json(
     monkeypatch.setattr("sys.stdin", StdinBytes(b"\xff"))
     with pytest.raises(InvalidInputError, match="UTF-8"):
         read_text("-")
+
+
+@pytest.mark.parametrize(
+    "text",
+    [
+        '{"actor":"agent","actor":"user"}',
+        '{"payload":{"mode":"guided","mode":"hands_on"}}',
+    ],
+)
+def test_rejects_duplicate_json_keys_at_every_depth(text: str) -> None:
+    with pytest.raises(InvalidInputError, match="duplicate JSON object key") as raised:
+        parse_json(text, label="event")
+    assert "actor" not in str(raised.value)
+    assert "mode" not in str(raised.value)
 
 
 def test_atomic_write_and_expected_digest(tmp_path: Path) -> None:
@@ -132,6 +148,8 @@ def test_rejects_directory_and_symlink_targets(tmp_path: Path) -> None:
         pytest.skip("symlink creation is unavailable")
     with pytest.raises(IOSafetyError, match="symlink"):
         atomic_write_text(link, "unsafe")
+    with pytest.raises(IOSafetyError, match="symlink"):
+        sha256_file(link)
     assert target.read_text(encoding="utf-8") == "safe"
 
 

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from typing import Any
 
 from .model import SCHEMA_VERSION
@@ -24,8 +25,12 @@ def _plain(value: Any) -> str:
     return text
 
 
-def _code(value: Any) -> str:
-    return str(value).replace("\r", " ").replace("\n", " ").replace("`", "\\`").strip()
+def _code_span(value: Any) -> str:
+    text = str(value).replace("\r", " ").replace("\n", " ").strip()
+    longest_run = max((len(run) for run in re.findall(r"`+", text)), default=0)
+    fence = "`" * (longest_run + 1)
+    padding = " " if text.startswith("`") or text.endswith("`") else ""
+    return f"{fence}{padding}{text}{padding}{fence}"
 
 
 def _selected_concepts(ledger: dict[str, Any], maximum: int) -> list[dict[str, Any]]:
@@ -106,9 +111,9 @@ def _evidence_lines(concept: dict[str, Any], language: str) -> list[str]:
     title = "项目证据" if language == "zh" else "Project evidence"
     lines = [f"- {title}:"]
     for item in sorted(evidence, key=lambda entry: entry["id"]):
-        lines.append(
-            f"  - `{_code(item['locator'])}` — {_plain(item['summary'])} ({_plain(item['class'])})"
-        )
+        summary = _plain(item["summary"])
+        evidence_class = _plain(item["class"])
+        lines.append(f"  - {_code_span(item['locator'])} — {summary} ({evidence_class})")
     return lines
 
 
@@ -133,7 +138,7 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
             "## 已完成的工作",
             "",
             f"- 目标：{_plain(ledger['session']['goal'])}",
-            f"- 当前模式：`{_code(ledger['session']['mode'])}`",
+            f"- 当前模式：{_code_span(ledger['session']['mode'])}",
         ]
         if ledger["milestones"]:
             lines.extend(
@@ -152,7 +157,7 @@ def render_receipt(ledger: dict[str, Any], receipt: dict[str, Any]) -> str:
             "## What we completed",
             "",
             f"- Goal: {_plain(ledger['session']['goal'])}",
-            f"- Current mode: `{_code(ledger['session']['mode'])}`",
+            f"- Current mode: {_code_span(ledger['session']['mode'])}",
         ]
         if ledger["milestones"]:
             lines.extend(

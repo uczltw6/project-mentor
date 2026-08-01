@@ -31,6 +31,7 @@ python -m mypy --strict .agents/skills/project-mentor/scripts tools
 python -m coverage run --branch -m pytest -q
 python -m coverage report
 python tools/sync_skill.py --check
+python tools/repository_scan.py --all
 ```
 
 The official `quick_validate.py` from the current `skill-creator` should also

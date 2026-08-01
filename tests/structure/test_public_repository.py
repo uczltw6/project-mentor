@@ -17,6 +17,7 @@ def test_public_repository_has_required_documentation_and_community_files() -> N
         "docs/architecture.md",
         "docs/product-contract.md",
         "docs/evaluation.md",
+        "docs/security-review-v0.1.0.md",
         "docs/threat-model.md",
         "examples/project-mentor-ledger.json",
         "examples/learning-receipt.md",

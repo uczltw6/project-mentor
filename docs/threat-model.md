@@ -38,6 +38,8 @@ arbitrary command-execution capability.
 | Private absolute paths or development residue enter the release | Repository scanner, clean-clone rehearsal, tracked-file review, public forward results contain sanitized notes only | Human-authored prose can still disclose context that pattern rules do not recognize |
 | Dependency or action compromise | No runtime dependencies; bounded development dependencies; Dependabot; pinned GitHub Actions where practical | Package indexes and GitHub Actions remain external supply-chain trust roots |
 | Mentoring degrades the requested technical result | Delivery-first contract, mode interruption limits, independent technical verification, no-skill baseline comparison | The baseline covers representative fixtures, not every project |
+| A valid ledger is mistaken for authenticated evidence | Documentation separates schema validity from truth; user claims require observable host evidence | Ledgers are unsigned and can be edited by anyone with filesystem access |
+| A self-asserted event actor is mistaken for identity authentication | Schema limits user-evidence events to `user`/`shared`; documentation defines `actor` as caller-supplied provenance that the host must ground in conversation | The local helper has no identity provider or cryptographic signer |
 
 ## Security invariants
 

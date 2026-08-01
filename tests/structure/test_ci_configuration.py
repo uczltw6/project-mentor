@@ -29,6 +29,7 @@ def test_ci_covers_supported_python_cross_platform_and_release_gates() -> None:
         "ruff format --check",
         "mypy --strict",
         "coverage report --fail-under=90",
+        "repository_scan.py --all",
         "sync_skill.py --check",
         "run_official_skill_validation.py",
         "tests/structure",

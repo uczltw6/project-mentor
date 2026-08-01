@@ -80,3 +80,13 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Coverage and static gates:** Keep lint, format, strict typing, and 90% branch coverage as independent required jobs so failures are attributable.
 - **CodeQL decision:** Include Python CodeQL with extended security queries because the helper processes untrusted JSON, redacts sensitive strings, and performs persistent file replacement. The scan is useful despite the small, dependency-free runtime.
 - **Least privilege:** Default workflows to read-only repository contents; grant `security-events: write` only to CodeQL. Disable checkout credential persistence.
+
+## 2026-08-01 — Phase 9 adversarial security review
+
+- **Independent audit:** Run a clean-context, read-only review across the skill, helper, tests, CI, documentation, worktree, and Git history. Resolve every high-confidence finding before release and publish a sanitized disposition.
+- **Parser hardening:** Reject duplicate JSON keys recursively so a displayed field cannot differ from the last value used for validation.
+- **Renderer hardening:** Treat evidence locators as untrusted Markdown and choose a code-span fence longer than every contained backtick run.
+- **Bounded hashing:** Enforce the 1 MiB limit while streaming the pre-mutation ledger digest and refuse a symlink ledger before reading it.
+- **Release-path hardening:** Check a skill root for symlinks before resolving it; retain nested-link rejection and destination confinement.
+- **Authenticity boundary:** Define ledgers and event actors as unsigned caller-supplied provenance, not authenticated identity or proof of truth.
+- **Repository gate:** Scan releasable worktree files and complete Git history without echoing matched content; run the same gate in full-history CI.

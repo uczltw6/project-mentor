@@ -149,6 +149,11 @@ Every event uses:
 
 Allowed actors are `user`, `agent`, `shared`, and `rule`. Event payloads are strict:
 
+`actor` is caller-supplied provenance metadata, not an authenticated identity.
+The host must use `user` or `shared` only when the conversation contains the
+corresponding observable user action. Schema validation prevents agent-actor
+events from adding user evidence, but it cannot prove who authored a JSON file.
+
 | Event type | Payload |
 | --- | --- |
 | `session_started` | `goal`, `mode`; both must match the initialized session |
@@ -204,6 +209,7 @@ Expected failures print a concise error without a traceback. Use the global `--d
 - Support schema version 1 only. Reject a future version without modifying the file.
 - Reject unknown fields rather than silently losing them.
 - Limit each input to 1 MiB and require UTF-8.
+- Reject duplicate JSON object keys rather than applying last-value-wins parsing.
 - Validate and redact before persistence.
 - Write a same-directory temporary file, flush it, recheck expected content, and replace atomically.
 - Refuse an existing symlink output target.

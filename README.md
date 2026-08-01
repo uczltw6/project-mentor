@@ -85,7 +85,7 @@ the current loading and invocation model.
 Ask the built-in installer:
 
 ```text
-$skill-installer install project-mentor from https://github.com/uczltw6/project-mentor/tree/main/.agents/skills/project-mentor
+$skill-installer install project-mentor from https://github.com/uczltw6/project-mentor/tree/v0.1.0/.agents/skills/project-mentor
 ```
 
 Or install manually into an empty destination.
@@ -93,7 +93,7 @@ Or install manually into an empty destination.
 macOS/Linux:
 
 ```bash
-git clone --depth 1 https://github.com/uczltw6/project-mentor.git
+git clone --depth 1 --branch v0.1.0 https://github.com/uczltw6/project-mentor.git
 mkdir -p "$HOME/.agents/skills"
 cp -R project-mentor/.agents/skills/project-mentor "$HOME/.agents/skills/project-mentor"
 test -f "$HOME/.agents/skills/project-mentor/SKILL.md"
@@ -102,7 +102,7 @@ test -f "$HOME/.agents/skills/project-mentor/SKILL.md"
 Windows PowerShell:
 
 ```powershell
-git clone --depth 1 https://github.com/uczltw6/project-mentor.git
+git clone --depth 1 --branch v0.1.0 https://github.com/uczltw6/project-mentor.git
 New-Item -ItemType Directory -Force "$HOME\.agents\skills" | Out-Null
 Copy-Item -Recurse "project-mentor\.agents\skills\project-mentor" "$HOME\.agents\skills\project-mentor"
 Test-Path "$HOME\.agents\skills\project-mentor\SKILL.md"
@@ -206,6 +206,7 @@ python -m mypy --strict .agents/skills/project-mentor/scripts tools
 python -m coverage run --branch -m pytest -q
 python -m coverage report
 python tools/sync_skill.py --check
+python tools/repository_scan.py --all
 ```
 
 The test suite covers schema and event behavior, redaction, atomic writes,
@@ -221,6 +222,10 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - Redaction is defense in depth, not a guarantee that arbitrary secret formats
   will be recognized.
 - Concurrent writers must reload after a revision conflict.
+- Ledgers are not signed or tamper-evident. Validation proves structure and
+  internal references, not the truth or authorship of supplied evidence.
+- Event `actor` values are caller-supplied provenance labels, not authenticated
+  identities; the host must ground `user` and `shared` labels in conversation.
 - Post-hoc audits can only be as strong as the files, history, tests, and
   conversation evidence available to the host.
 - English and Chinese are supported behavior targets, but v0.1.0 does not claim
@@ -234,6 +239,7 @@ cases with 260/260 applicable rubric points; read the exact, bounded claims in
 - [Product contract](docs/product-contract.md)
 - [Evaluation and reproduction](docs/evaluation.md)
 - [Threat model](docs/threat-model.md)
+- [v0.1.0 security review](docs/security-review-v0.1.0.md)
 - [Contributing](CONTRIBUTING.md)
 - [Security policy](SECURITY.md)
 - [Changelog](CHANGELOG.md)

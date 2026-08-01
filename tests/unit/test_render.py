@@ -105,6 +105,31 @@ def test_english_and_chinese_receipts_are_deterministic_and_separate_claims(
     assert "Agent 展示" in chinese and "你展示的内容" in chinese
 
 
+def test_untrusted_locator_cannot_break_out_of_markdown_code_span(
+    ledger: dict[str, Any],
+    concept: dict[str, Any],
+    evidence: dict[str, Any],
+    demonstration: dict[str, Any],
+    event_factory: Any,
+) -> None:
+    locator = "` [link](https://example.invalid) ![image](https://example.invalid/x) <script>"
+    evidence["locator"] = locator
+    current = _rich_ledger(ledger, concept, evidence, demonstration, event_factory)
+    contract = build_receipt_contract(
+        current,
+        language="en",
+        generated_at="2026-08-01T00:10:00Z",
+        output_locator="chat",
+    )
+
+    receipt = render_receipt(current, contract)
+
+    assert f"`` {locator} ``" in receipt
+    evidence_line = next(line for line in receipt.splitlines() if locator in line)
+    assert evidence_line.startswith("  - `` ")
+    assert evidence_line.count("``") == 2
+
+
 def test_receipt_marks_unavailable_and_unassessed(
     ledger: dict[str, Any], concept: dict[str, Any], event_factory: Any
 ) -> None:

@@ -19,11 +19,11 @@ class SyncError(ValueError):
 
 def release_files(root: Path) -> dict[Path, str]:
     """Return content hashes for non-generated regular files below root."""
+    if root.is_symlink():
+        raise SyncError(f"skill directory must not be a symlink: {root}")
     root = root.resolve()
     if not root.is_dir():
         raise SyncError(f"skill directory does not exist: {root}")
-    if root.is_symlink():
-        raise SyncError(f"skill directory must not be a symlink: {root}")
 
     files: dict[Path, str] = {}
     for path in sorted(root.rglob("*")):
