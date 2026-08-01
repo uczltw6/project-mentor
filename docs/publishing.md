@@ -15,9 +15,9 @@ The PyPI publisher must match these values exactly:
 | Workflow | `release.yml` |
 | Environment | `pypi` |
 
-For the first upload, register this identity as a pending publisher under the
-PyPI account's Publishing page. A pending publisher does not reserve the name;
-the project is created when the first matching OIDC upload succeeds.
+For the first upload, this identity was registered as a pending publisher under
+the PyPI account's Publishing page. The matching OIDC upload created the
+project and converted the publisher into an active trusted publisher.
 
 ## Security boundary
 
@@ -32,15 +32,15 @@ The `pypi` GitHub Environment and protected `main` branch are part of the
 publisher identity. The publishing action generates PyPI attestations by
 default. There are no repository PyPI passwords or API-token secrets.
 
-## First v0.3.0 publication
+## Initial v0.3.0 publication
 
-Because GitHub Release `v0.3.0` predates the publishing workflow, start the
-workflow manually from `main` with `tag` set to `v0.3.0`. Do not enable
+Because GitHub Release `v0.3.0` predated the publishing workflow, its initial
+upload was started manually from `main` with `tag` set to `v0.3.0`. The public
+index, isolated installation, metadata, and attestations were then verified.
+The temporary manual trigger was removed after verification. Future releases
+publish only from the `release: published` event. The workflow does not enable
 `skip-existing`: a duplicate version must fail visibly because PyPI files are
 immutable.
-
-After the first publication is independently verified, remove the temporary
-manual trigger. Future releases publish from the `release: published` event.
 
 ## Future release sequence
 
