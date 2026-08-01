@@ -52,9 +52,12 @@ Good `guided` behavior:
 
 Micro-brief:
 
-> **What we are doing:** Creating a project-local virtual environment.  
-> **Why now:** The next command installs this project's packages, and isolation prevents changing other Python projects.  
-> **Where:** `.venv/` and the interpreter used by the launch command.  
+> **What we are doing:** Creating a project-local virtual environment.
+>
+> **Why now:** The next command installs this project's packages, and isolation prevents changing other Python projects.
+>
+> **Where:** `.venv/` and the interpreter used by the launch command.
+>
 > **Risk:** Installing into system Python can create version conflicts.
 
 Do not claim that the user can recreate the environment when the agent ran every command. Record project evidence and set exposure to `encountered`; leave demonstrations empty.
@@ -89,8 +92,10 @@ User:
 
 Good audit language:
 
-> Observed: `api/routes.py#create_item` registers the route and `tests/test_items.py#test_invalid_payload` checks a rejected payload.  
-> Inferred: the request model is intended to keep validation at the API boundary. Commit history was unavailable, so I cannot establish when or why that choice was introduced.  
+> Observed: `api/routes.py#create_item` registers the route and `tests/test_items.py#test_invalid_payload` checks a rejected payload.
+>
+> Inferred: the request model is intended to keep validation at the API boundary. Commit history was unavailable, so I cannot establish when or why that choice was introduced.
+>
 > User evidence: none in the available conversation; understanding remains unassessed.
 
 Do not invent a baseline, author, command, or test run. A current file proves current structure, not the history that produced it.
