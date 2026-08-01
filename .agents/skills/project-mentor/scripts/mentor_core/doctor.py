@@ -2,11 +2,13 @@
 
 from __future__ import annotations
 
+import stat
 import sys
 from pathlib import Path
 from typing import Any
 
-from .io import read_json
+from .errors import MentorError
+from .io import read_json, read_text
 from .model import SCHEMA_VERSION
 from .validate import validate_ledger
 
@@ -17,9 +19,11 @@ REQUIRED_SKILL_FILES = (
     "references/ledger-schema.md",
     "references/mentoring-policy.md",
     "scripts/project_mentor.py",
+    "scripts/mentor_core/__main__.py",
     "scripts/mentor_core/anchors.py",
     "scripts/mentor_core/doctor.py",
 )
+FRONTMATTER_LIMIT = 65_536
 
 
 def _check(identifier: str, ok: bool, detail: str) -> dict[str, str]:
@@ -28,8 +32,8 @@ def _check(identifier: str, ok: bool, detail: str) -> dict[str, str]:
 
 def _frontmatter_name(skill_file: Path) -> str | None:
     try:
-        lines = skill_file.read_text(encoding="utf-8").splitlines()
-    except (OSError, UnicodeError):
+        lines = read_text(skill_file, limit=FRONTMATTER_LIMIT).splitlines()
+    except (MentorError, OSError, UnicodeError):
         return None
     if not lines or lines[0].strip() != "---":
         return None
@@ -42,8 +46,60 @@ def _frontmatter_name(skill_file: Path) -> str | None:
     return None
 
 
+def _is_link_or_reparse_point(path: Path) -> bool:
+    try:
+        metadata = path.lstat()
+    except OSError:
+        return True
+    reparse_flag = getattr(stat, "FILE_ATTRIBUTE_REPARSE_POINT", 0)
+    attributes = getattr(metadata, "st_file_attributes", 0)
+    return stat.S_ISLNK(metadata.st_mode) or bool(attributes & reparse_flag)
+
+
+def is_safe_skill_root(skill_root: Path, *, boundary: Path | None = None) -> bool:
+    """Return whether a skill root is a real directory inside an optional boundary."""
+    components: tuple[Path, ...]
+    try:
+        if boundary is None:
+            components = (skill_root,)
+            boundary_resolved = skill_root.parent.resolve(strict=True)
+        else:
+            relative = skill_root.relative_to(boundary)
+            current = boundary
+            components_list: list[Path] = []
+            for part in relative.parts:
+                current /= part
+                components_list.append(current)
+            components = tuple(components_list)
+            if _is_link_or_reparse_point(boundary):
+                return False
+            boundary_resolved = boundary.resolve(strict=True)
+        resolved = skill_root.resolve(strict=True)
+    except (OSError, ValueError):
+        return False
+    return (
+        skill_root.is_dir()
+        and all(not _is_link_or_reparse_point(path) for path in components)
+        and resolved.is_relative_to(boundary_resolved)
+    )
+
+
+def _is_safe_skill_file(skill_root: Path, relative: str) -> bool:
+    try:
+        root_resolved = skill_root.resolve(strict=True)
+        current = skill_root
+        for part in Path(relative).parts:
+            current /= part
+            if _is_link_or_reparse_point(current):
+                return False
+        resolved = current.resolve(strict=True)
+    except OSError:
+        return False
+    return current.is_file() and resolved.is_relative_to(root_resolved)
+
+
 def diagnose(
-    *, skill_root: Path, project_root: Path, ledger_path: Path | None = None
+    *, skill_root: Path | None, project_root: Path, ledger_path: Path | None = None
 ) -> dict[str, Any]:
     """Return a stable diagnostic report without mutating either root."""
     checks: list[dict[str, str]] = []
@@ -58,37 +114,49 @@ def diagnose(
         )
     )
 
-    skill_ok = skill_root.is_dir() and not skill_root.is_symlink()
-    checks.append(
-        _check(
-            "skill-root",
-            skill_ok,
-            "skill directory is a regular directory"
-            if skill_ok
-            else "skill directory is missing or is a symlink",
+    if skill_root is None:
+        checks.append(
+            {
+                "id": "skill-root",
+                "status": "skipped",
+                "detail": "no Agent Skill directory was requested or discovered",
+            }
         )
-    )
-    for relative in REQUIRED_SKILL_FILES:
-        path = skill_root / relative
-        present = path.is_file() and not path.is_symlink()
+    else:
+        skill_ok = is_safe_skill_root(skill_root)
         checks.append(
             _check(
-                f"skill-file:{relative}",
-                present,
-                "present" if present else "required regular file is missing",
+                "skill-root",
+                skill_ok,
+                "skill directory is a regular directory"
+                if skill_ok
+                else "skill directory is missing or is a symlink",
             )
         )
+        for relative in REQUIRED_SKILL_FILES:
+            present = skill_ok and _is_safe_skill_file(skill_root, relative)
+            checks.append(
+                _check(
+                    f"skill-file:{relative}",
+                    present,
+                    "present" if present else "required regular file is missing",
+                )
+            )
 
-    skill_name = _frontmatter_name(skill_root / "SKILL.md")
-    checks.append(
-        _check(
-            "skill-name",
-            skill_name == "project-mentor",
-            "frontmatter name is project-mentor"
-            if skill_name == "project-mentor"
-            else "SKILL.md frontmatter name is missing or unexpected",
+        skill_name = (
+            _frontmatter_name(skill_root / "SKILL.md")
+            if skill_ok and _is_safe_skill_file(skill_root, "SKILL.md")
+            else None
         )
-    )
+        checks.append(
+            _check(
+                "skill-name",
+                skill_name == "project-mentor",
+                "frontmatter name is project-mentor"
+                if skill_name == "project-mentor"
+                else "SKILL.md frontmatter name is missing or unexpected",
+            )
+        )
 
     project_ok = project_root.is_dir() and not project_root.is_symlink()
     checks.append(
@@ -111,6 +179,6 @@ def diagnose(
 
     return {
         "schema_version": SCHEMA_VERSION,
-        "status": "ok" if all(item["status"] == "ok" for item in checks) else "error",
+        "status": "ok" if all(item["status"] != "error" for item in checks) else "error",
         "checks": checks,
     }

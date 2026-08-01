@@ -36,6 +36,16 @@ jobs:
           cache: pip
       - name: Install development dependencies
         run: python -m pip install ".[dev]"
+      - name: Smoke-test installed CLI entry points
+        run: |
+          project-mentor --version
+          python -m project_mentor_cli --version
+      - name: Build release distributions
+        run: python -m build --no-isolation --outdir "$RUNNER_TEMP/dist" .
+      - name: Validate release distributions
+        run: python tools/validate_distribution.py --dist-dir "$RUNNER_TEMP/dist" --version 0.3.0
+      - name: Install and smoke-test the built wheel
+        run: python tools/smoke_test_wheel.py --dist-dir "$RUNNER_TEMP/dist" --version 0.3.0 --skill-root .agents/skills/project-mentor
       - name: Lint
         run: python -m ruff check .
       - name: Check formatting

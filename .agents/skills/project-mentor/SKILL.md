@@ -137,8 +137,14 @@ Before creating or applying persisted events, read [ledger-schema.md](references
 
 Run the helper from the skill directory when Python 3.10+ is available:
 
+If the Python distribution is installed, use `project-mentor` for the same
+commands. Otherwise use the bundled entry point shown below. Confirm the active
+implementation with `project-mentor --version` or
+`python scripts/project_mentor.py --version` when version identity matters.
+
 ```text
 python scripts/project_mentor.py --help
+python scripts/project_mentor.py --version
 python scripts/project_mentor.py init --goal "Run the project" --output ledger.json
 python scripts/project_mentor.py apply-event --ledger ledger.json --event event.json --expected-revision 0
 python scripts/project_mentor.py validate --kind ledger --input ledger.json

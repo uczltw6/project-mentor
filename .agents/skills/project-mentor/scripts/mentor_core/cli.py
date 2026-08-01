@@ -9,8 +9,9 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+from . import __version__
 from .anchors import anchor_event_id, verify_anchors
-from .doctor import diagnose
+from .doctor import diagnose, is_safe_skill_root
 from .errors import InvalidInputError, MentorError, RevisionConflictError
 from .events import apply_event
 from .io import atomic_write_json, read_json, read_text, sha256_file, write_text
@@ -41,7 +42,8 @@ def _reject_output_alias(source: str | Path, destination: str | Path) -> None:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(prog="project-mentor", description=__doc__)
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     parser.add_argument("--debug", action="store_true", help="Show unexpected Python tracebacks")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
@@ -193,10 +195,28 @@ def _command_redact(args: argparse.Namespace) -> int:
     return 0
 
 
+def _discover_skill_root(project_root: Path) -> Path | None:
+    bundled = Path(__file__).resolve().parents[2]
+    candidates = (
+        (project_root, project_root / ".agents" / "skills" / "project-mentor"),
+        (Path.home(), Path.home() / ".agents" / "skills" / "project-mentor"),
+        (bundled.parent, bundled),
+    )
+    return next(
+        (
+            candidate
+            for boundary, candidate in candidates
+            if is_safe_skill_root(candidate, boundary=boundary)
+            and (candidate / "SKILL.md").is_file()
+        ),
+        None,
+    )
+
+
 def _command_doctor(args: argparse.Namespace) -> int:
     if args.ledger is not None:
         _reject_output_alias(args.ledger, args.output)
-    skill_root = args.skill_root or Path(__file__).resolve().parents[2]
+    skill_root = args.skill_root or _discover_skill_root(args.project_root)
     report = diagnose(
         skill_root=skill_root,
         project_root=args.project_root,

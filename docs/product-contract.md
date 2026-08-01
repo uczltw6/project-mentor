@@ -94,3 +94,15 @@ non-local, or symlinked locators produce `unavailable`; they do not become
 guesses. A mismatch is reported without mutation unless the caller explicitly
 uses `--write` with the current ledger revision. PyPI and marketplace
 publication remain separate release decisions rather than implied side effects.
+
+## V0.3 CLI extension
+
+V0.3 exposes the deterministic helper as the `project-mentor` console command
+and `python -m project_mentor_cli`, while retaining the bundled skill script.
+Every entry point uses the same standard-library runtime and schema contract.
+
+The CLI owns deterministic local data operations only. It does not activate the
+skill, choose concepts, teach, call a model, scan a repository broadly, execute
+recorded commands, or persist learning state without an explicit output or
+write option. CLI semantic versioning does not replace ledger schema versioning.
+PyPI publication requires a separate verified upload and public-index download.
