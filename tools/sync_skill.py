@@ -103,7 +103,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         help="Public repository skill directory",
     )
     action = parser.add_mutually_exclusive_group()
-    action.add_argument("--check", action="store_true", help="Check parity without writing (default)")
+    action.add_argument(
+        "--check", action="store_true", help="Check parity without writing (default)"
+    )
     action.add_argument("--write", action="store_true", help="Synchronize source into destination")
     return parser.parse_args(argv)
 

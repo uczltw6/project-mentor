@@ -24,6 +24,7 @@ packages = []
 
 [tool.pytest.ini_options]
 addopts = "-ra --strict-config --strict-markers"
+norecursedirs = ["tests/behavior/fixtures"]
 testpaths = ["tests"]
 
 [tool.coverage.run]

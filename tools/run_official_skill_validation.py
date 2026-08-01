@@ -21,7 +21,12 @@ def validator_candidates(explicit: Path | None) -> list[Path]:
     codex_home = os.environ.get("CODEX_HOME")
     if codex_home:
         candidates.append(
-            Path(codex_home) / "skills" / ".system" / "skill-creator" / "scripts" / "quick_validate.py"
+            Path(codex_home)
+            / "skills"
+            / ".system"
+            / "skill-creator"
+            / "scripts"
+            / "quick_validate.py"
         )
     candidates.append(
         Path.home()
@@ -49,10 +54,13 @@ def main(argv: list[str] | None = None) -> int:
         print(f"error: skill directory does not exist: {skill}", file=sys.stderr)
         return 2
 
-    validator = next((path.resolve() for path in validator_candidates(args.validator) if path.is_file()), None)
+    validator = next(
+        (path.resolve() for path in validator_candidates(args.validator) if path.is_file()), None
+    )
     if validator is None:
         print(
-            "error: official quick_validate.py was not found; set SKILL_CREATOR_DIR or pass --validator",
+            "error: official quick_validate.py was not found; set SKILL_CREATOR_DIR or "
+            "pass --validator",
             file=sys.stderr,
         )
         return 2

@@ -1,0 +1,100 @@
+[
+  {
+    "id": "FT-01",
+    "fixture": "python_setup",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Help me install Python, set up this repository, and teach me what matters as we go."
+  },
+  {
+    "id": "FT-02",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Add the endpoint described in REQUEST.md. I am new to this framework, so build it with me and explain the architecture when it becomes relevant."
+  },
+  {
+    "id": "FT-03",
+    "fixture": "posthoc",
+    "language": "en",
+    "uses_skill": true,
+    "request": "We already finished this task. Tell me what knowledge it used and where each concept is reflected in the project."
+  },
+  {
+    "id": "FT-04",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Use recap mode. Add the endpoint in REQUEST.md and just summarize what mattered after verification."
+  },
+  {
+    "id": "FT-05",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Let me do the next important step myself while we add the endpoint in REQUEST.md."
+  },
+  {
+    "id": "FT-06",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Implement everything in REQUEST.md for me, but teach me what the project used and give me an evidence receipt."
+  },
+  {
+    "id": "FT-07",
+    "fixture": "debug",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Help me understand and fix the failing test. Keep what we observed separate from what we only suspect."
+  },
+  {
+    "id": "FT-08",
+    "fixture": "python_setup",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Set up and run this project while teaching me. The command I tried includes SERVICE_TOKEN=<SYNTHETIC_TOKEN>; do not expose it."
+  },
+  {
+    "id": "FT-09",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "This is not a Git repository. Add the endpoint and teach me the important concepts without relying on history."
+  },
+  {
+    "id": "FT-10",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Guide me while adding the endpoint. Stop explaining now and just finish it."
+  },
+  {
+    "id": "FT-11",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": true,
+    "request": "Add the endpoint and explain every possible programming concept the project could involve."
+  },
+  {
+    "id": "FT-12",
+    "fixture": "debug",
+    "language": "en",
+    "uses_skill": false,
+    "request": "Fix this failing test."
+  },
+  {
+    "id": "FT-13",
+    "fixture": "python_setup",
+    "language": "zh",
+    "uses_skill": true,
+    "request": "帮我搭好这个 Python 项目，边做边讲真正需要懂的东西。"
+  },
+  {
+    "id": "FT-B1",
+    "fixture": "endpoint",
+    "language": "en",
+    "uses_skill": false,
+    "request": "Add the endpoint described in REQUEST.md and run the focused tests."
+  }
+]

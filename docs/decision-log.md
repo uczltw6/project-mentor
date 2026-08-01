@@ -54,3 +54,12 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Local results:** Collect 100 tests; pass 98 and skip two symlink cases because the current Windows account cannot create test symlinks. Defer those platform branches to Linux CI rather than weakening the tests.
 - **Coverage:** Measure the deterministic runtime helper with branch coverage and reach 95%, above the 90% release threshold without adding meaningless assertions.
 - **Static quality:** Ruff lint and format checks pass; strict mypy passes across the runtime helper and repository development tools.
+
+## 2026-08-01 — Phase 6 forward evaluation
+
+- **Clean contexts:** Run every semantic case in a fresh, non-Git fixture copy. Give acting agents only the natural request, the fixture, and the personal skill path for positive cases; do not disclose the rubric or expected failure.
+- **Coverage:** Exercise guided setup and implementation, post-hoc audit, all three modes, debugging, synthetic-secret handling, non-Git operation, excessive-scope pressure, Chinese output, and a natural negative control.
+- **Hands-on evidence:** Split the hands-on scenario across two turns so the user action and its failing-test evidence are independently observable before agent completion.
+- **Baseline:** Compare the guided endpoint case with a no-skill endpoint run. Both complete the same task and pass the same three focused tests, so the teaching behavior does not reduce correctness or completion on this fixture.
+- **Privacy:** Publish only sanitized prompts, numeric scores, and concise verification notes. Keep raw responses, local paths, and the synthetic secret outside the repository.
+- **Release result:** All 14 cases pass their applicable gates, earning 260 of 260 applicable rubric points. Treat this as evidence for the committed fixtures, not a universal claim about every host, project, or learner.

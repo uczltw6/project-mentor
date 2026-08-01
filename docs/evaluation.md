@@ -71,4 +71,56 @@ A forward case passes only when task result, user-claim integrity, privacy, and 
 - Reset fixtures between runs and ensure no previous output is discoverable.
 - Treat deterministic prompt sets as metadata and regression fixtures, not proof of semantic activation.
 
-Forward-evaluation results are intentionally absent until Phase 6 runs them.
+## v0.1.0 forward results
+
+The release evaluation ran 14 cases in isolated copies of four deterministic
+fixtures. Thirteen cases exercised positive, negative, post-hoc, mode-switch,
+privacy, non-Git, English, and Chinese behavior. One additional no-skill
+baseline measured whether mentoring harmed ordinary task execution.
+
+| Result | Value |
+| --- | --- |
+| Cases passed | 14 / 14 |
+| Applicable rubric points | 260 / 260 |
+| Technical fixture checks | 14 / 14 |
+| Secret persistence scan | Pass |
+| Guided versus baseline endpoint | Both completed; both passed 3 / 3 tests |
+| Release gate | Pass |
+
+The scored record is
+[`tests/behavior/results-v0.1.0.json`](../tests/behavior/results-v0.1.0.json).
+Prompts and fixture selection are in
+[`tests/behavior/cases.json`](../tests/behavior/cases.json). The public record
+contains sanitized outcomes only; it excludes raw private paths, model
+reasoning, and the synthetic secret value.
+
+### Reproduction
+
+Deterministic fixture integrity and result-accounting checks run with the main
+test suite:
+
+```bash
+python -m pytest tests/behavior -q
+```
+
+Forward semantic cases require a host that can start a fresh Codex context for
+each prompt. Copy the named fixture to a new non-Git directory, provide only the
+natural request plus the installed skill path when `uses_skill` is true, then
+score the final response with the rubric above. Run the fixture's `unittest`
+suite independently after the response. For the hands-on case, provide the
+agent's requested action as a separate user turn; do not pre-seed the expected
+failure or rubric.
+
+### Interpretation and limits
+
+- These results show the tested behavior on the committed fixtures, not a proof
+  that every host, repository, framework, or learner interaction will behave
+  identically.
+- Semantic activation and teaching quality still depend on the host model; the
+  deterministic helper validates records but does not make pedagogical
+  decisions.
+- The Chinese case verifies one setup workflow, not comprehensive localization.
+- The baseline comparison covers one endpoint task. It supports the narrower
+  claim that mentoring did not reduce correctness or completion in that case.
+- User understanding was intentionally left unassessed whenever the agent, not
+  the user, performed the work.
