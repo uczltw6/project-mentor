@@ -36,3 +36,12 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Redaction boundary:** Redact recognized credentials recursively before JSON persistence and again before rendered or summarized output. Prefer omission or a marker over retaining uncertain sensitive material.
 - **Stable CLI exits:** Use 0 for success, 2 for invalid input/schema, 3 for revision conflict, 4 for I/O or path safety, and 5 for conflicting event replay. Expected failures do not emit tracebacks unless `--debug` is requested.
 - **Rendering:** Select up to five active concepts by classification and evidence weight, render deterministic English or Chinese receipts, and state unverified user understanding explicitly when demonstrations are absent.
+
+## 2026-08-01 — Phase 4 skill workflow
+
+- **Progressive disclosure:** Keep `SKILL.md` at 162 lines with the operating workflow and direct links only. Place intervention detail in `mentoring-policy.md`, schema/CLI detail in `ledger-schema.md`, and calibration cases in `examples.md`.
+- **Activation metadata:** Retain the proposed intent-bounded description after reviewing positive and negative cases. Keep implicit invocation enabled at its documented default because ordinary delegated coding, isolated explanations, and course creation are explicit negative boundaries.
+- **Helper boundary:** Direct the host agent to perform semantic concept selection and evidence judgment. Use the Python helper only for deterministic validation, redaction, persistence, ordering, summaries, and rendering.
+- **Python-unavailable fallback:** Continue mentoring with conversation or ephemeral state and avoid repeated helper retries during the same known-unavailable phase.
+- **Official metadata generation:** Regenerate `agents/openai.yaml` with the official generator after reading the completed skill. Enable Python UTF-8 mode to avoid the generator's Windows locale-dependent read failure.
+- **Validation:** The official validator passes against both the canonical personal skill and public copy; all 15 release files are byte-for-byte identical, with no placeholders, auxiliary documents, or generated caches.
