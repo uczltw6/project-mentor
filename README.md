@@ -4,6 +4,8 @@ Turn real coding work into evidence-grounded, just-in-time learning without
 slowing down delivery.
 
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](https://www.python.org/)
+[![CI](https://github.com/uczltw6/project-mentor/actions/workflows/ci.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/ci.yml)
+[![CodeQL](https://github.com/uczltw6/project-mentor/actions/workflows/codeql.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/codeql.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-open%20standard-5A67D8.svg)](https://agentskills.io/)
 

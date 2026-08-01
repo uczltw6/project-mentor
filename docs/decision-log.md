@@ -71,3 +71,12 @@ This log records release-relevant decisions without retaining private paths, cre
 - **Example provenance:** Generate the example ledger and receipt with the released helper from four committed strict events and test byte-for-byte regeneration.
 - **Architecture boundary:** Describe host-agent semantic reasoning separately from the standard-library helper's deterministic validation, redaction, event, persistence, and rendering responsibilities.
 - **Community surface:** Add contribution, conduct, security, issue, and pull-request guidance with explicit secret and private-data hygiene.
+
+## 2026-08-01 — Phase 8 continuous integration
+
+- **Cross-platform contract:** Run the full suite on Linux for every supported Python minor from 3.10 through 3.14 and on Windows at both boundary versions.
+- **Immutable actions:** Resolve current official releases and pin checkout v7.0.1, setup-python v7.0.0, and CodeQL v4.37.4 to full commit SHAs. Let Dependabot propose future reviewed updates.
+- **Official structure gate:** Check out a pinned `openai/skills` snapshot, run its `quick_validate.py`, run repository structure tests, and compare a staged user-scope installation byte-for-byte with the public skill.
+- **Coverage and static gates:** Keep lint, format, strict typing, and 90% branch coverage as independent required jobs so failures are attributable.
+- **CodeQL decision:** Include Python CodeQL with extended security queries because the helper processes untrusted JSON, redacts sensitive strings, and performs persistent file replacement. The scan is useful despite the small, dependency-free runtime.
+- **Least privilege:** Default workflows to read-only repository contents; grant `security-events: write` only to CodeQL. Disable checkout credential persistence.
