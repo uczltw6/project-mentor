@@ -60,7 +60,6 @@ def test_pypi_release_workflow_is_separated_and_minimally_privileged() -> None:
     for contract in (
         "release:",
         "types: [published]",
-        "workflow_dispatch:",
         "needs: build",
         "name: pypi",
         "id-token: write",
@@ -71,6 +70,7 @@ def test_pypi_release_workflow_is_separated_and_minimally_privileged() -> None:
         "packages-dir: dist/",
     ):
         assert contract in release
+    assert "workflow_dispatch:" not in release
     assert release.count("id-token: write") == 1
     assert "password:" not in release
     assert "PYPI_TOKEN" not in release

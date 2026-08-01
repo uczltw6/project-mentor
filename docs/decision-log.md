@@ -147,3 +147,6 @@ This log records release-relevant decisions without retaining private paths, cre
   its default attestations.
 - **Failure:** Do not skip existing files or silently overwrite a release; PyPI
   versions and files are immutable.
+- **Trigger hardening:** After the separately authorized and verified v0.3.0
+  bootstrap upload, remove the temporary manual trigger. Publish future versions
+  only from the GitHub `release: published` event.
