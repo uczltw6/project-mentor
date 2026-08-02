@@ -27,9 +27,10 @@ Run the release checks before submitting:
 ```bash
 python -m ruff check .
 python -m ruff format --check .
-python -m mypy --strict .agents/skills/project-mentor/scripts tools
+python -m mypy --strict .agents/skills/project-mentor/scripts tools evals
 python -m coverage run --branch -m pytest -q
 python -m coverage report
+python evals/run_local.py --results evals/results/v0.3.0.json
 python tools/sync_skill.py --check
 python tools/repository_scan.py --all
 ```
@@ -62,6 +63,9 @@ the installable skill directory.
   not treat those fixtures as semantic proof.
 - Run clean-context forward cases for changes to activation, modes, interruption
   policy, evidence language, privacy, or receipts.
+- Keep natural prompts in `evals/cases.jsonl`, score against `evals/rubric.json`
+  only after the acting agent stops, and validate sanitized results with the
+  local eval gate.
 - Compare a representative learning case with a no-skill baseline when a change
   could affect ordinary task completion.
 - Publish only sanitized prompts, numeric results, and concise conclusions.

@@ -3,6 +3,15 @@
 All notable changes to Project Mentor are documented here. The project follows
 [Semantic Versioning](https://semver.org/).
 
+## Unreleased
+
+### Added
+
+- A top-level, standard-library eval harness with JSONL cases, an explicit
+  rubric, deterministic graders, versioned results, and a dedicated CI gate.
+- Fresh-context v0.3.0 behavioral coverage for positive, negative, baseline,
+  privacy, mode, evidence, English, and Chinese scenarios.
+
 ## [0.3.0] — 2026-08-01
 
 ### Added

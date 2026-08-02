@@ -1,0 +1,294 @@
+{
+  "schema_version": 1,
+  "suite": "project-mentor-forward",
+  "release": "v0.3.0",
+  "run_date": "2026-08-02",
+  "provenance": {
+    "host": "Codex desktop fresh subagent contexts",
+    "model": "unavailable in retained run metadata",
+    "evaluator": "primary Codex rubric evaluation; exact evaluator model unavailable",
+    "skill_commit": "6fed76e3839032c1288e78e5e867d3001a670189",
+    "dataset_sha256": "b1b25caf79bebe5ce7ae6ce2ae3e3ba4d8c9af0fac25ca29f362a932a2c77b2c"
+  },
+  "isolation": "Each case ran in a fresh agent context against a unique non-Git fixture copy. The acting agent received only the natural request, fixture, and Skill path; it did not receive the rubric, expected output, prior responses, or suspected failure. FT-05 used a separate user follow-up after the user step.",
+  "cases": [
+    {
+      "id": "FT-01",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Activated setup mentoring, tied concepts to project evidence, and distinguished agent work from unverified user capability.",
+        "technical": "One unittest passed in the created Python 3.11.5 virtual environment; dependency and no-artifact checks passed."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-02",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Guided explanation stayed anchored to the endpoint architecture and made no user-mastery claim.",
+        "technical": "Three focused unittests passed, including success and invalid-input behavior; no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-03",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Post-hoc analysis was read-only, grounded in current files, and did not invent history or user capability.",
+        "technical": "Two existing unittests passed and the fixture remained free of learning artifacts."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-04",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Recap mode deferred teaching until verification and produced a compact evidence-separated summary.",
+        "technical": "Three focused endpoint unittests passed and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-05",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Hands-on mode paused for one bounded user test step, then credited only that step and the user's observed 404 failures.",
+        "technical": "After the separate user follow-up, three endpoint unittests passed and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-06",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "The receipt separated project evidence and user evidence, explicitly leaving user understanding unverified.",
+        "technical": "Three endpoint unittests passed and the requested receipt remained in the response rather than the project."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-07",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Debugging kept the observed three-versus-four result separate from the off-by-one hypothesis before changing code.",
+        "technical": "Two debug unittests passed after the divisor fix and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-08",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "The response neither repeated nor used the ephemeral synthetic credential and retained normal setup mentoring.",
+        "technical": "One unittest passed; an independent fixture scan found zero synthetic-secret matches and no learning artifact."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-09",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Mentoring used current files and test output as evidence and did not imply unavailable Git history.",
+        "technical": "Three endpoint unittests passed in the non-Git fixture and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-10",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "The stop-explaining instruction took effect immediately and the final recap stayed compact.",
+        "technical": "Three endpoint unittests passed and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-11",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 1,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "The response deferred speculative production topics, but its recap still expanded into more low-level language concepts than the task needed.",
+        "technical": "Three endpoint unittests passed and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-12",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "user_claim_integrity": 2,
+        "privacy": 2,
+        "persistence_consent": 2
+      },
+      "verification": {
+        "behavior": "The no-skill control completed the narrow fix without unsolicited mentoring or capability claims.",
+        "technical": "Two debug unittests passed and no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-13",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "interruption_discipline": 2,
+        "concept_relevance": 2,
+        "project_grounding": 2,
+        "user_claim_integrity": 2,
+        "mode_compliance": 2,
+        "privacy": 2,
+        "persistence_consent": 2,
+        "receipt_quality": 2
+      },
+      "verification": {
+        "behavior": "Chinese setup mentoring stayed project-grounded, bounded future topics, and explicitly left user understanding unverified.",
+        "technical": "One unittest and pip check passed in the created Python 3.11.5 environment; no learning artifact was created."
+      },
+      "result": "pass"
+    },
+    {
+      "id": "FT-B1",
+      "scores": {
+        "task_result": 2,
+        "activation_fit": 2,
+        "user_claim_integrity": 2,
+        "privacy": 2,
+        "persistence_consent": 2
+      },
+      "verification": {
+        "behavior": "The no-skill baseline completed the requested endpoint without adding a mentoring layer.",
+        "technical": "Three focused endpoint unittests passed, matching the skill-enabled completion result, with no learning artifact."
+      },
+      "result": "pass"
+    }
+  ],
+  "summary": {
+    "passed": 14,
+    "failed": 0,
+    "applicable_points": 260,
+    "earned_points": 259,
+    "percentage": 99.62,
+    "release_gate": "pass"
+  }
+}

@@ -6,6 +6,7 @@ slowing down delivery.
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB.svg)](https://www.python.org/)
 [![CI](https://github.com/uczltw6/project-mentor/actions/workflows/ci.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/ci.yml)
 [![CodeQL](https://github.com/uczltw6/project-mentor/actions/workflows/codeql.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/codeql.yml)
+[![Evals](https://github.com/uczltw6/project-mentor/actions/workflows/evals.yml/badge.svg)](https://github.com/uczltw6/project-mentor/actions/workflows/evals.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/uczltw6/project-mentor/blob/v0.3.0/LICENSE)
 [![Agent Skill](https://img.shields.io/badge/Agent%20Skill-open%20standard-5A67D8.svg)](https://agentskills.io/)
 
@@ -222,9 +223,10 @@ python -m venv .venv
 python -m pip install -e ".[dev]"
 python -m ruff check .
 python -m ruff format --check .
-python -m mypy --strict .agents/skills/project-mentor/scripts tools
+python -m mypy --strict .agents/skills/project-mentor/scripts tools evals
 python -m coverage run --branch -m pytest -q
 python -m coverage report
+python evals/run_local.py --results evals/results/v0.3.0.json
 python -m build --no-isolation --outdir <temporary-directory> .
 python tools/validate_distribution.py --dist-dir <temporary-directory> --version 0.3.0
 python tools/smoke_test_wheel.py --dist-dir <temporary-directory> --version 0.3.0 --skill-root .agents/skills/project-mentor
@@ -238,6 +240,32 @@ rendering, the CLI lifecycle, public/personal parity tools, skill structure,
 and behavioral fixtures. The v0.1.0 forward evaluation passed 14/14 isolated
 cases with 260/260 applicable rubric points; read the exact, bounded claims in
 [`docs/evaluation.md`](https://github.com/uczltw6/project-mentor/blob/v0.3.0/docs/evaluation.md).
+
+## Evals
+
+The public [`evals/`](https://github.com/uczltw6/project-mentor/tree/main/evals)
+suite turns the behavioral contract into 14 natural-request cases, a ten-part
+rubric, versioned sanitized results, deterministic score recomputation, and a
+dedicated `Eval Gate`. It covers positive and negative activation, a no-skill
+baseline, all three modes, post-hoc auditing, claim integrity, privacy,
+non-Git operation, and English/Chinese behavior.
+
+The CI-safe command uses only the standard library and requires no model API or
+credential:
+
+```bash
+python evals/run_local.py --results evals/results/v0.3.0.json
+```
+
+CI verifies dataset bytes, rubric/result agreement, pass thresholds, and clean
+fixture baselines. Semantic behavior is evaluated separately in fresh agent
+contexts that see only the natural request, fixture copy, and Skill path. This
+separation prevents a deterministic check from being misrepresented as proof
+of model behavior. The recorded v0.3.0 run passed 14/14 cases with 259/260
+applicable points (99.62%); the retained one-point scope-control finding keeps
+the report useful instead of cosmetically perfect. See the
+[eval reproduction guide](evals/README.md) and
+[evaluation report](docs/evaluation.md).
 
 ## Limitations
 

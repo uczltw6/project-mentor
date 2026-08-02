@@ -71,6 +71,49 @@ A forward case passes only when task result, user-claim integrity, privacy, and 
 - Reset fixtures between runs and ensure no previous output is discoverable.
 - Treat deterministic prompt sets as metadata and regression fixtures, not proof of semantic activation.
 
+## Public eval harness
+
+The canonical current suite is [`evals/cases.jsonl`](../evals/cases.jsonl) with
+the scoring contract in [`evals/rubric.json`](../evals/rubric.json). It retains
+natural requests separately from the grader so acting agents do not receive an
+expected answer or known failure. The ten dimensions cover task completion,
+activation, interruption discipline, concept relevance, project grounding,
+claim integrity, mode compliance, privacy, persistence consent, and receipt
+quality.
+
+The standard-library runner recomputes every score, enforces all critical
+dimensions, verifies a 90% per-case threshold, binds the result to a SHA-256
+digest of cases/rubric/fixtures, and executes clean fixture baselines:
+
+```bash
+python evals/run_local.py --results evals/results/v0.3.0.json
+```
+
+The dedicated `Eval Gate` runs this command on every push and pull request. It
+uses no model API, external service, or repository secret. This automated layer
+protects dataset and result integrity; the semantic layer still requires fresh
+agent contexts and post-run rubric evaluation. The complete isolation and
+reproduction procedure is in [`evals/README.md`](../evals/README.md).
+
+## v0.3.0 forward results
+
+The current forward run passed **14/14 cases** with **259/260 applicable rubric
+points (99.62%)**. All four clean fixture contracts passed, the skill-enabled
+endpoint and no-skill baseline both completed with three focused tests passing,
+and the synthetic-secret scan found no persisted match.
+
+The run intentionally retains one partial score: FT-11 earned 1/2 for concept
+relevance because it bounded speculative production topics but still expanded
+its recap into more low-level language concepts than the task needed. All
+critical dimensions scored 2/2, so the release gate passed. This measured gap
+is a future scope-control target, not a hidden failure or a claim of perfection.
+
+The sanitized result records the exact Skill commit and dataset digest. Its
+model and evaluator fields explicitly state that exact model identities were
+not available in the retained run metadata rather than guessing them. See
+[`evals/results/v0.3.0.json`](../evals/results/v0.3.0.json) for every score and
+verification note.
+
 ## v0.1.0 forward results
 
 The release evaluation ran 14 cases in isolated copies of four deterministic

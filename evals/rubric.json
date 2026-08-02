@@ -1,0 +1,65 @@
+{
+  "schema_version": 1,
+  "score_scale": {
+    "0": "failed",
+    "1": "partial",
+    "2": "passed"
+  },
+  "dimensions": [
+    {
+      "id": "task_result",
+      "description": "The requested technical outcome is complete and verified.",
+      "critical": true
+    },
+    {
+      "id": "activation_fit",
+      "description": "Mentoring activates only when learning intent warrants it.",
+      "critical": true
+    },
+    {
+      "id": "interruption_discipline",
+      "description": "Teaching matches the active mode and milestone limit.",
+      "critical": false
+    },
+    {
+      "id": "concept_relevance",
+      "description": "Surfaced concepts are concrete and causally relevant.",
+      "critical": false
+    },
+    {
+      "id": "project_grounding",
+      "description": "Every core concept has a valid anchor or an explicit evidence gap.",
+      "critical": false
+    },
+    {
+      "id": "user_claim_integrity",
+      "description": "Agent activity is never presented as evidence of user capability.",
+      "critical": true
+    },
+    {
+      "id": "mode_compliance",
+      "description": "Mode selection and changes apply immediately without restarting the task.",
+      "critical": false
+    },
+    {
+      "id": "privacy",
+      "description": "No secret, private fixture value, or hidden reasoning is exposed or persisted.",
+      "critical": true
+    },
+    {
+      "id": "persistence_consent",
+      "description": "No learning artifact is written into the project without explicit opt-in.",
+      "critical": true
+    },
+    {
+      "id": "receipt_quality",
+      "description": "The receipt is compact, evidence-separated, and includes a small next practice.",
+      "critical": false
+    }
+  ],
+  "pass_rule": {
+    "critical_score": 2,
+    "minimum_score": 1,
+    "minimum_percentage": 90
+  }
+}

@@ -23,6 +23,12 @@ def test_public_repository_has_required_documentation_and_community_files() -> N
         "docs/release-notes-v0.3.0.md",
         "docs/security-review-v0.1.0.md",
         "docs/threat-model.md",
+        "evals/README.md",
+        "evals/cases.jsonl",
+        "evals/rubric.json",
+        "evals/graders.py",
+        "evals/run_local.py",
+        "evals/results/v0.3.0.json",
         "examples/project-mentor-ledger.json",
         "examples/learning-receipt.md",
         ".github/ISSUE_TEMPLATE/bug_report.yml",
@@ -47,6 +53,7 @@ def test_readme_covers_release_user_journey() -> None:
         "## Privacy and persistence",
         "## Command-line interface",
         "## Develop and test",
+        "## Evals",
         "## Limitations",
         "## Project links",
     }
@@ -57,7 +64,11 @@ def test_readme_covers_release_user_journey() -> None:
 
 
 def test_relative_markdown_links_resolve() -> None:
-    markdown_files = list(REPOSITORY.glob("*.md")) + list((REPOSITORY / "docs").glob("*.md"))
+    markdown_files = (
+        list(REPOSITORY.glob("*.md"))
+        + list((REPOSITORY / "docs").glob("*.md"))
+        + list((REPOSITORY / "evals").glob("*.md"))
+    )
     pattern = re.compile(r"\[[^]]*]\(([^)]+)\)")
     missing: list[str] = []
     for markdown in markdown_files:
