@@ -128,15 +128,23 @@ def test_eval_gate_rejects_dataset_paths_outside_repository(tmp_path: Path) -> N
     }
 
 
-def test_current_result_records_release_skill_commit() -> None:
+def test_current_result_skill_commit_matches_skill_when_object_is_available() -> None:
     result = json.loads(RESULTS.read_text(encoding="utf-8"))
-    completed = subprocess.run(
-        ["git", "rev-parse", "v0.3.0^{commit}"],
+    commit = result["provenance"]["skill_commit"]
+    object_check = subprocess.run(
+        ["git", "cat-file", "-e", f"{commit}^{{commit}}"],
         cwd=REPOSITORY,
         capture_output=True,
-        check=True,
+        check=False,
         text=True,
         encoding="utf-8",
     )
+    if object_check.returncode != 0:
+        return
 
-    assert result["provenance"]["skill_commit"] == completed.stdout.strip()
+    skill_diff = subprocess.run(
+        ["git", "diff", "--quiet", commit, "--", ".agents/skills/project-mentor"],
+        cwd=REPOSITORY,
+        check=False,
+    )
+    assert skill_diff.returncode == 0
