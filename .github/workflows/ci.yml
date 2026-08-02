@@ -51,7 +51,7 @@ jobs:
       - name: Check formatting
         run: python -m ruff format --check .
       - name: Check types
-        run: python -m mypy --strict .agents/skills/project-mentor/scripts tools
+        run: python -m mypy --strict .agents/skills/project-mentor/scripts tools evals
       - name: Scan releasable files and Git history
         run: python tools/repository_scan.py --all
 

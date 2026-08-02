@@ -55,6 +55,19 @@ def test_codeql_and_dependabot_are_narrowly_configured() -> None:
     assert "update-types:" in dependabot
 
 
+def test_eval_workflow_runs_the_public_gate_without_credentials() -> None:
+    evals = (WORKFLOWS / "evals.yml").read_text(encoding="utf-8")
+    for contract in (
+        "name: Eval Gate",
+        "python evals/run_local.py",
+        "evals/results/v0.3.0.json",
+        "timeout-minutes: 5",
+    ):
+        assert contract in evals
+    assert "id-token: write" not in evals
+    assert "secrets." not in evals
+
+
 def test_pypi_release_workflow_is_separated_and_minimally_privileged() -> None:
     release = (WORKFLOWS / "release.yml").read_text(encoding="utf-8")
     for contract in (

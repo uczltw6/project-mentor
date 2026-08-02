@@ -15,9 +15,10 @@ Run from the repository root after installing development dependencies with `pyt
 ```text
 python -m ruff check .
 python -m ruff format --check .
-python -m mypy .agents/skills/project-mentor/scripts tools
+python -m mypy .agents/skills/project-mentor/scripts tools evals
 python -m coverage run -m pytest
 python -m coverage report --fail-under=90
+python evals/run_local.py --results evals/results/v0.3.0.json
 python tools/run_official_skill_validation.py --skill .agents/skills/project-mentor
 python tools/sync_skill.py --check
 ```

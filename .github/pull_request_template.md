@@ -6,6 +6,7 @@ Describe the user-visible result and why it belongs in Project Mentor.
 
 - [ ] Focused tests pass.
 - [ ] Full tests, lint, format, strict typing, and coverage gate pass.
+- [ ] The local eval gate passes and semantic results are refreshed when behavior changed.
 - [ ] Public skill structure and canonical/public parity pass when applicable.
 - [ ] Behavioral or baseline evaluation was updated when semantic behavior changed.
 
